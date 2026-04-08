@@ -3,6 +3,7 @@ import MapKit
 
 struct FindCarView: View {
     let engine: ParkingEngine
+    let historyStore: HistoryStore
     let locationManager: LocationManager
 
     @State private var cameraPosition: MapCameraPosition = .automatic
@@ -12,6 +13,9 @@ struct FindCarView: View {
             Group {
                 if let session = engine.session {
                     activeView(session: session)
+                } else if let lastSession = historyStore.sessions.first,
+                          lastSession.location.latitude != 0 {
+                    lastParkedView(session: lastSession)
                 } else {
                     emptyView
                 }
@@ -127,6 +131,73 @@ struct FindCarView: View {
         }
         .onDisappear {
             locationManager.stopUpdating()
+        }
+    }
+
+    // MARK: - Last Parked
+
+    private func lastParkedView(session: ParkingSession) -> some View {
+        VStack(spacing: 0) {
+            Map(position: $cameraPosition) {
+                Annotation("Last Parked", coordinate: session.location.coordinate) {
+                    Image(systemName: SettingsManager.shared.vehicleType.iconName)
+                        .font(.title2)
+                        .foregroundStyle(.white)
+                        .padding(8)
+                        .background(Color(.secondaryLabel))
+                        .clipShape(Circle())
+                }
+                UserAnnotation()
+            }
+            .mapControls {
+                MapUserLocationButton()
+                MapCompass()
+            }
+            .frame(maxHeight: .infinity)
+
+            VStack(spacing: 12) {
+                HStack {
+                    Image(systemName: "clock.arrow.circlepath")
+                        .foregroundStyle(.secondary)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Last parked")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                        Text(session.formattedAddress)
+                            .font(.subheadline)
+                    }
+                    Spacer()
+                    Text(session.startDate.formatted(date: .abbreviated, time: .shortened))
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+
+                HStack(spacing: 12) {
+                    Button {
+                        openInMaps(location: session.location)
+                    } label: {
+                        Label("Directions", systemImage: "arrow.triangle.turn.up.right.diamond.fill")
+                            .font(.headline)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 12)
+                            .background(Color(hex: "#4ade80"))
+                            .foregroundStyle(.black)
+                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                    }
+
+                    ShareLink(item: shareText(for: session)) {
+                        Label("Share", systemImage: "square.and.arrow.up")
+                            .font(.headline)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 12)
+                            .background(Color(.systemGray5))
+                            .foregroundStyle(.primary)
+                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                    }
+                }
+            }
+            .padding()
+            .background(Color(.systemBackground))
         }
     }
 

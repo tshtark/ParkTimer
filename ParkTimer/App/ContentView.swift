@@ -37,6 +37,7 @@ struct ContentView: View {
 
             FindCarView(
                 engine: engine,
+                historyStore: historyStore,
                 locationManager: locationManager
             )
             .tabItem { Label("Find Car", systemImage: "map.fill") }

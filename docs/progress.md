@@ -83,3 +83,4 @@
 
 ### P7 — Feature Discovery (self-discovered)
 - [x] Start screen layout reorder — Start button + unmetered link moved above the fold, right after duration presets. Optional fields (note, photo, location) below. Two-tap flow with zero scrolling. (Run 19)
+- [x] Find Car shows last parked location when no active session — map with gray pin, address, date, Directions + Share. Solves "I parked at the airport, where's my car?" (Run 20)
