@@ -351,25 +351,12 @@ struct StartParkingView: View {
     }
 
     private var photoSection: some View {
-        PhotosPicker(selection: $selectedPhoto, matching: .images) {
-            HStack {
-                Image(systemName: photoData != nil ? "photo.fill" : "camera.fill")
-                    .foregroundStyle(photoData != nil ? Color(hex: "#4ade80") : .secondary)
-                Text(photoData != nil ? "Photo added" : "Photo of parking spot")
-                    .font(.subheadline)
-                    .foregroundStyle(photoData != nil ? .primary : .secondary)
-                Spacer()
-                if photoData != nil {
-                    Image(systemName: "checkmark.circle.fill")
-                        .foregroundStyle(.green)
-                }
-            }
-            .padding()
-            .background(Color(.systemGray6))
-            .clipShape(RoundedRectangle(cornerRadius: 12))
+        let hasPhoto = photoData != nil
+        return PhotosPicker(selection: $selectedPhoto, matching: .images) {
+            PhotoPickerLabel(hasPhoto: hasPhoto)
         }
         .onChange(of: selectedPhoto) { _, newValue in
-            Task {
+            Task { @MainActor in
                 if let data = try? await newValue?.loadTransferable(type: Data.self) {
                     photoData = data
                 }
@@ -507,5 +494,28 @@ struct StartParkingView: View {
             )
             isGeocodingAddress = false
         }
+    }
+}
+
+// Extracted to avoid Swift 6 Sendable warning in PhotosPicker label closure
+struct PhotoPickerLabel: View {
+    let hasPhoto: Bool
+
+    var body: some View {
+        HStack {
+            Image(systemName: hasPhoto ? "photo.fill" : "camera.fill")
+                .foregroundStyle(hasPhoto ? Color(hex: "#4ade80") : .secondary)
+            Text(hasPhoto ? "Photo added" : "Photo of parking spot")
+                .font(.subheadline)
+                .foregroundStyle(hasPhoto ? .primary : .secondary)
+            Spacer()
+            if hasPhoto {
+                Image(systemName: "checkmark.circle.fill")
+                    .foregroundStyle(.green)
+            }
+        }
+        .padding()
+        .background(Color(.systemGray6))
+        .clipShape(RoundedRectangle(cornerRadius: 12))
     }
 }
