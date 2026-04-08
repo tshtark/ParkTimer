@@ -1,0 +1,254 @@
+import SwiftUI
+
+struct ActiveSessionView: View {
+    let engine: ParkingEngine
+    let sessionStore: SessionStore
+    let historyStore: HistoryStore
+    let locationManager: LocationManager
+
+    @State private var showEndConfirmation = false
+    @State private var showExtendSheet = false
+
+    var body: some View {
+        NavigationStack {
+            ScrollView {
+                VStack(spacing: 20) {
+                    countdownSection
+                    if engine.session?.isMetered == true {
+                        progressSection
+                    }
+                    infoCardsSection
+                    actionButtons
+                }
+                .padding()
+            }
+            .navigationTitle(engine.session?.isMetered == true ? "Metered" : "Tracking")
+            .navigationBarTitleDisplayMode(.inline)
+            .confirmationDialog("End Parking?", isPresented: $showEndConfirmation) {
+                Button("End Parking", role: .destructive) {
+                    endSession()
+                }
+            } message: {
+                Text("This will end your current parking session.")
+            }
+            .sheet(isPresented: $showExtendSheet) {
+                ExtendTimeSheet { minutes in
+                    extendTime(minutes: minutes)
+                    showExtendSheet = false
+                }
+            }
+        }
+    }
+
+    // MARK: - Countdown
+
+    private var countdownSection: some View {
+        VStack(spacing: 8) {
+            if engine.session?.isMetered == true {
+                CountdownDisplay(
+                    timeRemaining: engine.timeRemaining,
+                    state: engine.state
+                )
+            } else {
+                // Unmetered: elapsed time
+                Text(TimeFormatting.elapsed(engine.elapsedTime))
+                    .font(.system(size: 64, weight: .bold, design: .monospaced))
+                    .foregroundStyle(.primary)
+                    .contentTransition(.numericText())
+                    .animation(.linear(duration: 0.1), value: Int(engine.elapsedTime))
+
+                Text("Time parked")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+            }
+
+            if engine.state == .expired {
+                Text("METER EXPIRED")
+                    .font(.headline.bold())
+                    .foregroundStyle(Color(hex: "#ff4a4a"))
+                    .padding(.vertical, 6)
+                    .padding(.horizontal, 16)
+                    .background(Color(hex: "#ff4a4a").opacity(0.15))
+                    .clipShape(Capsule())
+            }
+        }
+        .padding(.top, 8)
+    }
+
+    // MARK: - Progress
+
+    private var progressSection: some View {
+        GeometryReader { geo in
+            ZStack(alignment: .leading) {
+                RoundedRectangle(cornerRadius: 6)
+                    .fill(Color(.systemGray5))
+                    .frame(height: 12)
+
+                RoundedRectangle(cornerRadius: 6)
+                    .fill(engine.state.color)
+                    .frame(width: max(0, geo.size.width * engine.progress), height: 12)
+                    .animation(.linear(duration: 1), value: engine.progress)
+            }
+        }
+        .frame(height: 12)
+    }
+
+    // MARK: - Info Cards
+
+    private var infoCardsSection: some View {
+        VStack(spacing: 12) {
+            if let session = engine.session, session.isMetered, let endDate = session.meterEndDate {
+                infoCard(
+                    icon: "clock.fill",
+                    title: "Expires at",
+                    value: endDate.formatted(date: .omitted, time: .shortened),
+                    color: engine.state.color
+                )
+            }
+
+            if let distance = locationManager.distanceToCar {
+                infoCard(
+                    icon: "figure.walk",
+                    title: "Distance to car",
+                    value: TimeFormatting.distanceText(distance),
+                    color: .blue
+                )
+            }
+
+            if let walkingMin = locationManager.walkingMinutesToCar {
+                infoCard(
+                    icon: "timer",
+                    title: "Walking time",
+                    value: "\(Int(ceil(walkingMin))) min",
+                    color: .blue
+                )
+            }
+
+            if let session = engine.session, let address = session.location.address {
+                infoCard(
+                    icon: "mappin.circle.fill",
+                    title: "Location",
+                    value: address,
+                    color: Color(hex: "#4ade80")
+                )
+            }
+
+            if let note = engine.session?.note, !note.isEmpty {
+                infoCard(icon: "note.text", title: "Note", value: note, color: .secondary)
+            }
+        }
+    }
+
+    private func infoCard(icon: String, title: String, value: String, color: Color) -> some View {
+        HStack {
+            Image(systemName: icon)
+                .foregroundStyle(color)
+                .frame(width: 28)
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text(title)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                Text(value)
+                    .font(.subheadline.weight(.medium))
+            }
+            Spacer()
+        }
+        .padding()
+        .background(Color(.systemGray6))
+        .clipShape(RoundedRectangle(cornerRadius: 12))
+    }
+
+    // MARK: - Actions
+
+    private var actionButtons: some View {
+        VStack(spacing: 12) {
+            if engine.session?.isMetered == true && StoreManager.shared.isProUnlocked {
+                Button {
+                    showExtendSheet = true
+                } label: {
+                    Label("Add Time", systemImage: "plus.circle.fill")
+                        .font(.headline)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 14)
+                        .background(Color(.systemGray5))
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                }
+            }
+
+            Button {
+                showEndConfirmation = true
+            } label: {
+                Text("End Parking")
+                    .font(.headline)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 14)
+                    .background(Color(hex: "#ff4a4a").opacity(0.15))
+                    .foregroundStyle(Color(hex: "#ff4a4a"))
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+            }
+        }
+    }
+
+    // MARK: - Helpers
+
+    private func endSession() {
+        if let completed = engine.stop() {
+            historyStore.add(completed)
+        }
+        sessionStore.clear()
+        ParkingActivityManager.shared.end()
+        AlertManager.shared.cancelAll()
+        HapticManager.shared.successFeedback()
+    }
+
+    private func extendTime(minutes: Int) {
+        engine.extendTime(by: minutes)
+        if let session = engine.session {
+            sessionStore.save(session)
+            ParkingActivityManager.shared.update(state: engine.state, session: session)
+            AlertManager.shared.scheduleAlert(
+                for: session,
+                walkingMinutes: locationManager.walkingMinutesToCar
+            )
+        }
+    }
+}
+
+// MARK: - Extend Time Sheet
+
+struct ExtendTimeSheet: View {
+    let onExtend: (Int) -> Void
+    @Environment(\.dismiss) private var dismiss
+
+    private let options = [15, 30, 60, 120]
+
+    var body: some View {
+        NavigationStack {
+            VStack(spacing: 16) {
+                Text("Add Time")
+                    .font(.headline)
+
+                ForEach(options, id: \.self) { minutes in
+                    Button {
+                        onExtend(minutes)
+                    } label: {
+                        Text("+ \(TimeFormatting.durationText(TimeInterval(minutes * 60)))")
+                            .font(.headline)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 14)
+                            .background(Color(.systemGray5))
+                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                    }
+                }
+            }
+            .padding()
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") { dismiss() }
+                }
+            }
+        }
+        .presentationDetents([.medium])
+    }
+}

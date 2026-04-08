@@ -1,0 +1,25 @@
+# Xcode
+*.xcodeproj/
+*.xcworkspace/
+build/
+DerivedData/
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# Swift Package Manager
+.build/
+Packages/
+
+# xcodegen
+*.xcodeproj
+
+# Superpowers brainstorming sessions
+.superpowers/
+
+# OS
+.DS_Store
+
+# Claude local settings
+.claude/settings.local.json

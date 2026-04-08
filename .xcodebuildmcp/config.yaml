@@ -1,0 +1,8 @@
+schemaVersion: 1
+enabledWorkflows: ["simulator", "ui-automation"]
+
+sessionDefaults:
+  projectPath: "./ParkTimer.xcodeproj"
+  scheme: "ParkTimer"
+  simulatorName: "iPhone 17 Pro"
+  configuration: "Debug"
