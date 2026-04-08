@@ -105,6 +105,9 @@
 - [x] Build with zero warnings
 - [x] StoreKit 2 IAP: com.parktimer.pro
 
+### Ready (cont.)
+- [x] App Store screenshots captured — 5 screens in docs/screenshots/ (Run 27)
+
 ### Needs Tal
 - [ ] App Store Connect setup (new app listing)
 - [ ] Privacy policy URL (GitHub Pages like RoundTimer)
