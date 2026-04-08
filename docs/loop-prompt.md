@@ -64,6 +64,13 @@ You are the QA team. Be ruthless. Test like a real user, not like the developer 
    - What if location is unavailable?
    - What if the user taps rapidly?
    - What happens at timer = 0?
+6. **Walk through the REAL user journey step by step.** This is critical. Don't just test "does the feature work" — think through the SEQUENCE of events in real life:
+   - "I just parked. I'm standing next to my car. I open the app. What happens?"
+   - "I set a 1hr timer. I walk 10 minutes to a restaurant. What happens?"
+   - "30 minutes later I check my phone. What do I see?"
+   - "My meter is about to expire. I'm walking back. What happens?"
+   - "I arrive back at my car. What happens?"
+   If ANY step in the journey feels wrong, broken, or annoying — that's a bug. Example: the "Back at your car?" prompt used to fire immediately on session start because distance = 0. Technically the code worked, but in the real journey you haven't left your car yet. Thinking through the timeline caught it.
 
 **Simulator-specific QA techniques:**
 
