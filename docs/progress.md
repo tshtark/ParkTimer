@@ -90,3 +90,26 @@
 - [x] Remember last hourly rate — pre-fills rate field from previous session, Quick Restart carries rate forward. Zero friction for daily parkers. (Run 24)
 - [x] Session Detail: show total cost for sessions with hourly rate (Run 25)
 - [x] Unmetered "Your spot is saved" card — fills empty space with reassuring message + Find Car tab hint (Run 25)
+- [x] App icon — green gradient + white "P" + clock accent, 1024x1024 PNG, no alpha channel (Run 26)
+
+---
+
+## App Store Submission Checklist
+
+### Ready
+- [x] App icon (1024x1024, no alpha)
+- [x] iPad orientations declared
+- [x] Location/Camera/LiveActivities permission keys
+- [x] Privacy: "Data Not Collected" (no network, no analytics)
+- [x] Age rating: 4+
+- [x] Build with zero warnings
+- [x] StoreKit 2 IAP: com.parktimer.pro
+
+### Needs Tal
+- [ ] App Store Connect setup (new app listing)
+- [ ] Privacy policy URL (GitHub Pages like RoundTimer)
+- [ ] App Store screenshots (6.7" + 6.5" + iPad letterboxed)
+- [ ] Replace placeholder .wav sound files with real recorded sounds
+- [ ] Test on real device (Tal's iPhone via USB)
+- [ ] Archive + upload: see CLAUDE.md for commands
+- [ ] Review app description / keywords / subtitle in App Store Connect
