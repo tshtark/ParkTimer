@@ -140,6 +140,14 @@ When every task in progress.md is checked off, you don't stop — you switch to 
 
 4. **Think about moments of delight.** Not just features — polish, animation, micro-interactions. The kind of thing that makes someone text a friend "you gotta try this app."
 
+5. **Brainstorm meaningful paid features.** The Pro upgrade ($4.99) needs to feel worth it. For every feature you discover, ask: "Should this be free or Pro?" Think about features that:
+   - Solve a **real pain point** that free users will hit naturally (not artificial gates)
+   - Are **hard to replicate** with workarounds (if a basic iPhone timer does the same thing, it's not Pro-worthy)
+   - **Compound in value** over time (e.g., history analytics, parking cost tracking, patterns)
+   - Create **"I need this"** moments — the user realizes mid-use that Pro would have saved them time/money/stress
+   
+   Ideas to evaluate: parking cost tracking (enter rate → see running cost → total in history), recurring spot favorites ("I park here every Tuesday"), export history as CSV/PDF for expense reports, multiple active sessions (work car + personal car), parking zone reminders (this block has street cleaning on Thursdays), session statistics (avg duration, total hours parked, money spent on meters this month).
+
 ### For each new feature you discover:
 - Add it to `docs/progress.md` under a new `### P5 — Self-Discovered Features` section
 - Write a brief rationale: who needs it, when, why
