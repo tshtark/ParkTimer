@@ -65,7 +65,7 @@
 - [x] Verify all permission keys in Info.plist — NSLocationWhenInUseUsageDescription, NSCameraUsageDescription, NSSupportsLiveActivities all present, iPad orientations added (Run 8)
 
 ### P4 — User-Driven Features
-- [ ] "Quick restart" — one-tap same duration at same location
+- [x] "Quick restart" — one-tap card on Start screen shows last metered duration + address, starts session immediately (Run 11)
 - [x] Walking ETA in warning notification text — shows "It's about a X-minute walk back" when walking time >1 min (Run 10)
 - [x] Request App Store review after 3rd completed session — triggers at 3rd, 10th, 25th session with 1s delay, in both end-session paths (Run 10)
 - [ ] Countdown color gradient on progress bar

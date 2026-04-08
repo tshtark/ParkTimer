@@ -4,6 +4,7 @@ import PhotosUI
 struct StartParkingView: View {
     let engine: ParkingEngine
     let sessionStore: SessionStore
+    let historyStore: HistoryStore
     let locationManager: LocationManager
 
     @State private var selectedDuration: TimeInterval?
@@ -28,6 +29,7 @@ struct StartParkingView: View {
                 VStack(spacing: 24) {
                     headerSection
                     warningBanners
+                    quickRestartSection
                     durationSection
                     locationSection
                     noteSection
@@ -49,6 +51,72 @@ struct StartParkingView: View {
             locationManager.requestLocation()
             geocodeCurrentLocation()
         }
+    }
+
+    // MARK: - Quick Restart
+
+    @ViewBuilder
+    private var quickRestartSection: some View {
+        if let lastMetered = historyStore.sessions.first(where: { $0.isMetered && $0.duration != nil }) {
+            Button {
+                quickRestart(from: lastMetered)
+            } label: {
+                HStack(spacing: 12) {
+                    Image(systemName: "arrow.clockwise.circle.fill")
+                        .font(.title2)
+                        .foregroundStyle(Color(hex: "#4ade80"))
+
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Quick Restart")
+                            .font(.subheadline.weight(.semibold))
+                        Text("\(TimeFormatting.durationText(lastMetered.duration!)) · \(lastMetered.formattedAddress)")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                            .lineLimit(1)
+                    }
+
+                    Spacer()
+
+                    Image(systemName: "chevron.right")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+                .padding()
+                .background(Color(hex: "#4ade80").opacity(0.08))
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+            }
+        }
+    }
+
+    private func quickRestart(from session: ParkingSession) {
+        guard let duration = session.duration else { return }
+        let location = makeLocation()
+        let loc = ParkingLocation(
+            latitude: location.latitude,
+            longitude: location.longitude,
+            address: geocodedAddress ?? session.location.address,
+            photoFilename: nil
+        )
+
+        let settings = SettingsManager.shared
+        engine.startMetered(
+            duration: duration,
+            location: loc,
+            note: nil,
+            alertMinutes: settings.alertMinutesBefore,
+            smartAlert: settings.isSmartAlertsEnabled && StoreManager.shared.isProUnlocked
+        )
+
+        if let newSession = engine.session {
+            sessionStore.save(newSession)
+            ParkingActivityManager.shared.start(session: newSession)
+            AlertManager.shared.scheduleAlert(
+                for: newSession,
+                walkingMinutes: locationManager.walkingMinutesToCar
+            )
+        }
+
+        HapticManager.shared.successFeedback()
     }
 
     // MARK: - Warnings

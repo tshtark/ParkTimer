@@ -26,6 +26,7 @@ struct ContentView: View {
                     StartParkingView(
                         engine: engine,
                         sessionStore: sessionStore,
+                        historyStore: historyStore,
                         locationManager: locationManager
                     )
                 }
