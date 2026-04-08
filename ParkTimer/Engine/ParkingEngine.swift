@@ -30,7 +30,7 @@ final class ParkingEngine {
     // MARK: - Start
 
     func startMetered(duration: TimeInterval, location: ParkingLocation, note: String?,
-                      alertMinutes: Int, smartAlert: Bool) {
+                      alertMinutes: Int, smartAlert: Bool, hourlyRate: Double? = nil) {
         let now = Date()
         session = ParkingSession(
             id: UUID(),
@@ -41,7 +41,8 @@ final class ParkingEngine {
             note: note,
             alertMinutesBefore: alertMinutes,
             isSmartAlertEnabled: smartAlert,
-            endedDate: nil
+            endedDate: nil,
+            hourlyRate: hourlyRate
         )
         warningFired = false
         state = .active
@@ -49,7 +50,7 @@ final class ParkingEngine {
         startTick()
     }
 
-    func startUnmetered(location: ParkingLocation, note: String?) {
+    func startUnmetered(location: ParkingLocation, note: String?, hourlyRate: Double? = nil) {
         session = ParkingSession(
             id: UUID(),
             startDate: Date(),
@@ -59,7 +60,8 @@ final class ParkingEngine {
             note: note,
             alertMinutesBefore: 0,
             isSmartAlertEnabled: false,
-            endedDate: nil
+            endedDate: nil,
+            hourlyRate: hourlyRate
         )
         state = .tracking
         elapsedTime = 0

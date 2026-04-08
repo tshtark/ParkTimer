@@ -140,6 +140,18 @@ struct ActiveSessionView: View {
                 .animation(.easeInOut(duration: 0.5), value: engine.state)
             }
 
+            // Parking cost (Pro)
+            if let session = engine.session, let rate = session.hourlyRate, rate > 0 {
+                let elapsed = engine.elapsedTime / 3600.0
+                let cost = elapsed * rate
+                infoCard(
+                    icon: "dollarsign.circle.fill",
+                    title: "Cost so far",
+                    value: String(format: "$%.2f", cost),
+                    color: Color(hex: "#fbbf24")
+                )
+            }
+
             // Distance + walking time — combined, hidden when at car
             if let distance = locationManager.distanceToCar, distance > 10 {
                 HStack(spacing: 16) {

@@ -16,6 +16,7 @@ struct StartParkingView: View {
     @State private var geocodedAddress: String?
     @State private var isGeocodingAddress = false
     @State private var proNudgeDismissed = false
+    @State private var hourlyRateText: String = ""
 
     private let presets: [(String, TimeInterval)] = [
         ("15m", 15 * 60),
@@ -37,6 +38,7 @@ struct StartParkingView: View {
                     proNudgeCard
                     locationSection
                     noteSection
+                    rateSection
                     photoSection
                 }
                 .padding()
@@ -331,6 +333,22 @@ struct StartParkingView: View {
         .clipShape(RoundedRectangle(cornerRadius: 12))
     }
 
+    @ViewBuilder
+    private var rateSection: some View {
+        if StoreManager.shared.isProUnlocked {
+            HStack {
+                Image(systemName: "dollarsign.circle")
+                    .foregroundStyle(.secondary)
+                TextField("Hourly rate (e.g., 3.00)", text: $hourlyRateText)
+                    .font(.subheadline)
+                    .keyboardType(.decimalPad)
+            }
+            .padding()
+            .background(Color(.systemGray6))
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+        }
+    }
+
     private var photoSection: some View {
         PhotosPicker(selection: $selectedPhoto, matching: .images) {
             HStack {
@@ -401,12 +419,14 @@ struct StartParkingView: View {
         )
 
         let settings = SettingsManager.shared
+        let rate = Double(hourlyRateText)
         engine.startMetered(
             duration: duration,
             location: loc,
             note: note.isEmpty ? nil : note,
             alertMinutes: settings.alertMinutesBefore,
-            smartAlert: settings.isSmartAlertsEnabled && StoreManager.shared.isProUnlocked
+            smartAlert: settings.isSmartAlertsEnabled && StoreManager.shared.isProUnlocked,
+            hourlyRate: rate
         )
 
         if let session = engine.session {

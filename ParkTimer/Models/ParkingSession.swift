@@ -10,8 +10,15 @@ struct ParkingSession: Codable, Identifiable, Sendable {
     var alertMinutesBefore: Int      // default 10, configurable (paid)
     var isSmartAlertEnabled: Bool    // distance-aware (paid)
     var endedDate: Date?             // when user ended the session
+    var hourlyRate: Double?          // parking cost per hour (Pro)
 
     var isMetered: Bool { meterEndDate != nil }
+
+    var totalCost: Double? {
+        guard let rate = hourlyRate, rate > 0 else { return nil }
+        let hours = displayDuration / 3600.0
+        return hours * rate
+    }
 
     var displayDuration: TimeInterval {
         if let endedDate {

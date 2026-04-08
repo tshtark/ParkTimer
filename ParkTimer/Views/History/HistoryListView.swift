@@ -122,6 +122,12 @@ struct HistoryListView: View {
                             .font(.caption)
                             .foregroundStyle(.secondary)
                     }
+
+                    if let cost = session.totalCost {
+                        Text(String(format: "$%.2f", cost))
+                            .font(.caption.bold())
+                            .foregroundStyle(Color(hex: "#fbbf24"))
+                    }
                 }
             }
 
