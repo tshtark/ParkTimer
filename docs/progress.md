@@ -68,7 +68,7 @@
 - [x] "Quick restart" — one-tap card on Start screen shows last metered duration + address, starts session immediately (Run 11)
 - [x] Walking ETA in warning notification text — shows "It's about a X-minute walk back" when walking time >1 min (Run 10)
 - [x] Request App Store review after 3rd completed session — triggers at 3rd, 10th, 25th session with 1s delay, in both end-session paths (Run 10)
-- [ ] Countdown color gradient on progress bar
+- [x] Countdown color gradient on progress bar — green (active), green→yellow (warning), yellow→red (expired) with animated transitions (Run 18)
 
 ### P5 — User Feedback (from Tal, 2026-04-09)
 - [x] Custom duration: replaced single 96-item wheel with two-component hours (0-8) + minutes (0/5/10/15/20/30/45) picker, summary text, disabled state for 0h 0m (Run 14)

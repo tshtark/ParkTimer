@@ -79,6 +79,25 @@ struct ActiveSessionView: View {
 
     // MARK: - Progress
 
+    private var progressGradient: LinearGradient {
+        switch engine.state {
+        case .active:
+            LinearGradient(colors: [Color(hex: "#4ade80")], startPoint: .leading, endPoint: .trailing)
+        case .warning:
+            LinearGradient(
+                colors: [Color(hex: "#4ade80"), Color(hex: "#fbbf24")],
+                startPoint: .leading, endPoint: .trailing
+            )
+        case .expired:
+            LinearGradient(
+                colors: [Color(hex: "#fbbf24"), Color(hex: "#ff4a4a")],
+                startPoint: .leading, endPoint: .trailing
+            )
+        default:
+            LinearGradient(colors: [.secondary], startPoint: .leading, endPoint: .trailing)
+        }
+    }
+
     private var progressSection: some View {
         GeometryReader { geo in
             ZStack(alignment: .leading) {
@@ -87,7 +106,7 @@ struct ActiveSessionView: View {
                     .frame(height: 12)
 
                 RoundedRectangle(cornerRadius: 6)
-                    .fill(engine.state.color)
+                    .fill(progressGradient)
                     .frame(width: max(0, geo.size.width * engine.progress), height: 12)
                     .animation(.linear(duration: 1), value: engine.progress)
                     .animation(.easeInOut(duration: 0.5), value: engine.state)
