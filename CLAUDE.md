@@ -2,16 +2,21 @@
 
 Parking meter countdown + car finder iPhone app. Freemium ($4.99 IAP), no ads, no accounts, no backend.
 
-## Status: Pre-Development
+## Status: V1.0 Code-Complete — Ready for App Store Submission
 
-Design spec complete. Implementation plan pending.
+Built in 33 autonomous development runs (April 8-9, 2026). See `docs/ship-summary.md` for full details.
 
 ## Documentation
 
 | Doc | Purpose |
 |-----|---------|
+| `docs/ship-summary.md` | **Start here** — IDs, features, architecture, QA results, submission checklist |
 | `docs/prd.md` | Product vision, features, phases, user stories, market research |
 | `docs/specs/2026-04-08-parktimer-design.md` | Technical design spec — architecture, data model, screens |
+| `docs/progress.md` | Development log — all 33 runs with QA results |
+| `docs/app-store-listing.md` | App Store description, keywords, review notes |
+| `docs/privacy-policy.md` | Privacy policy (Data Not Collected) |
+| `docs/loop-prompt.md` | Autonomous development loop instructions |
 
 **Read `docs/prd.md` first** — it has all product decisions and rationale.
 
