@@ -75,3 +75,8 @@
 - [x] History: limit free tier to 3 real + 3 blurred items, disable swipe-to-delete on blurred items (Run 12)
 - [ ] Share car location — share sheet with pin + address for "my partner needs to find the car"
 - [ ] Vehicle icon picker — choose car/bike/truck/motorcycle/scooter in Settings, shown on Start screen + Find Car + Live Activity
+
+### P6 — Pro Discovery (from Tal, 2026-04-09)
+- [ ] Post-session Pro nudge — after ending a metered session, show dismissable inline card about smart alerts (once per N sessions)
+- [ ] Distance-based Pro hint — on Active Session when >200m from car, subtle "Pro tip: Smart Alerts account for walking time"
+- [ ] First-use Pro education — on first app launch, brief onboarding card showing free vs Pro value (not a paywall, just info)
