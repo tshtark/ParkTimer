@@ -223,6 +223,26 @@ struct ActiveSessionView: View {
                     .frame(height: 120)
                     .clipShape(RoundedRectangle(cornerRadius: 12))
             }
+
+            // Unmetered: helpful reminder
+            if engine.session?.isMetered == false {
+                HStack(spacing: 12) {
+                    Image(systemName: "checkmark.shield.fill")
+                        .font(.title3)
+                        .foregroundStyle(Color(hex: "#4ade80"))
+
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Your spot is saved")
+                            .font(.subheadline.weight(.semibold))
+                        Text("Tap the Find Car tab anytime to get walking directions back.")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+                .padding()
+                .background(Color(hex: "#4ade80").opacity(0.06))
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+            }
         }
     }
 

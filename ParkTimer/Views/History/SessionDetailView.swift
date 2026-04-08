@@ -74,6 +74,14 @@ struct SessionDetailView: View {
                 )
             }
 
+            if let cost = session.totalCost {
+                detailRow(
+                    icon: "dollarsign.circle.fill",
+                    label: "Total Cost",
+                    value: String(format: "$%.2f", cost)
+                )
+            }
+
             if let note = session.note, !note.isEmpty {
                 detailRow(icon: "note.text", label: "Note", value: note)
             }

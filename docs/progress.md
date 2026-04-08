@@ -88,3 +88,5 @@
 - [x] Monthly parking statistics (Pro) — "This Month" card at top of History showing sessions/hours/cost. Blurred for free users with "Unlock Stats" button → UpgradeView. (Run 22)
 - [x] Update UpgradeView + WelcomeSheet with new Pro features — added Parking Cost Tracker + Monthly Statistics to feature list, updated welcome Pro teaser text (Run 23)
 - [x] Remember last hourly rate — pre-fills rate field from previous session, Quick Restart carries rate forward. Zero friction for daily parkers. (Run 24)
+- [x] Session Detail: show total cost for sessions with hourly rate (Run 25)
+- [x] Unmetered "Your spot is saved" card — fills empty space with reassuring message + Find Car tab hint (Run 25)
