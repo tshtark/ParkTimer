@@ -88,6 +88,7 @@ struct ActiveSessionView: View {
                     .fill(engine.state.color)
                     .frame(width: max(0, geo.size.width * engine.progress), height: 12)
                     .animation(.linear(duration: 1), value: engine.progress)
+                    .animation(.easeInOut(duration: 0.5), value: engine.state)
             }
         }
         .frame(height: 12)

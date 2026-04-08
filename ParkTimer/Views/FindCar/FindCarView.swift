@@ -121,16 +121,23 @@ struct FindCarView: View {
     // MARK: - Empty
 
     private var emptyView: some View {
-        VStack(spacing: 16) {
-            Image(systemName: "car.fill")
-                .font(.system(size: 48))
-                .foregroundStyle(.secondary)
-            Text("No Active Session")
-                .font(.title3.bold())
-            Text("Start parking to save your car's location.")
+        VStack(spacing: 20) {
+            Spacer()
+
+            Image(systemName: "mappin.slash")
+                .font(.system(size: 56))
+                .foregroundStyle(Color(hex: "#4ade80").opacity(0.4))
+
+            Text("No Car Saved")
+                .font(.title2.bold())
+
+            Text("When you start a parking session,\nyour car's location will appear here\nwith walking directions.")
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
+                .lineSpacing(2)
+
+            Spacer()
         }
         .padding()
     }

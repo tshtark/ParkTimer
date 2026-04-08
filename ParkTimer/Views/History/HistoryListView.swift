@@ -24,16 +24,23 @@ struct HistoryListView: View {
     }
 
     private var emptyView: some View {
-        VStack(spacing: 16) {
-            Image(systemName: "clock.fill")
-                .font(.system(size: 48))
-                .foregroundStyle(.secondary)
-            Text("No History Yet")
-                .font(.title3.bold())
-            Text("Your completed parking sessions will appear here.")
+        VStack(spacing: 20) {
+            Spacer()
+
+            Image(systemName: "clock.arrow.circlepath")
+                .font(.system(size: 56))
+                .foregroundStyle(Color(hex: "#4ade80").opacity(0.4))
+
+            Text("No Sessions Yet")
+                .font(.title2.bold())
+
+            Text("Your completed parking sessions\nwill appear here with location,\nduration, and details.")
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
+                .lineSpacing(2)
+
+            Spacer()
         }
         .padding()
     }
@@ -49,6 +56,9 @@ struct HistoryListView: View {
                     sessionRow(session: session, index: index)
                 }
                 .listRowBackground(Color(.systemBackground))
+            }
+            .onDelete { offsets in
+                historyStore.delete(at: offsets)
             }
 
             if !isPro && historyStore.sessions.count > 3 {

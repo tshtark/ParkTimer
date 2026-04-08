@@ -17,6 +17,11 @@ final class HistoryStore {
         save()
     }
 
+    func delete(at offsets: IndexSet) {
+        sessions.remove(atOffsets: offsets)
+        save()
+    }
+
     func clearAll() {
         sessions = []
         try? FileManager.default.removeItem(at: fileURL)
