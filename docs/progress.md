@@ -112,6 +112,7 @@
 - [x] Privacy policy draft — docs/privacy-policy.md, "Data Not Collected", zero network (Run 28)
 - [x] Improved alert sounds — warning (two-tone rising), expired (pulsing alarm), tick (subtle click) (Run 28)
 - [x] App Store listing copy — description, keywords, What's New, promo text, review notes in docs/app-store-listing.md (Run 29)
+- [x] Dark mode regression test — verified all features added since Run 5 (Pro nudge, stats card, cost badges, vehicle picker, "spot saved" card). Zero issues. (Run 30)
 
 ### Needs Tal
 - [ ] App Store Connect setup (new app listing)
