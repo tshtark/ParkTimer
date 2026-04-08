@@ -12,7 +12,6 @@ struct StartParkingView: View {
     @State private var note: String = ""
     @State private var selectedPhoto: PhotosPickerItem?
     @State private var photoData: Data?
-    @State private var showCamera = false
     @State private var geocodedAddress: String?
     @State private var isGeocodingAddress = false
 

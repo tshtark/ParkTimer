@@ -61,7 +61,7 @@
 - [x] Accessibility labels on all elements — verified via snapshot_ui, all buttons/images/text have labels (Run 8)
 - [x] VoiceOver support verification — SwiftUI provides labels automatically, placeholder text readable (Run 8)
 - [x] Test on multiple simulator sizes — verified on iPhone 17 Pro + iPhone 17e (smallest), layout scales correctly (Run 8)
-- [ ] Clean up dead code
+- [x] Clean up dead code — removed unused `showCamera` state var; fixed "Back at car" prompt to require user walked >100m away first (Run 9)
 - [x] Verify all permission keys in Info.plist — NSLocationWhenInUseUsageDescription, NSCameraUsageDescription, NSSupportsLiveActivities all present, iPad orientations added (Run 8)
 
 ### P4 — User-Driven Features

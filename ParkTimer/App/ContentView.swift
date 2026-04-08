@@ -8,6 +8,7 @@ struct ContentView: View {
     @State private var selectedTab = 0
     @State private var showNearCarPrompt = false
     @State private var nearCarPromptDismissed = false
+    @State private var hasBeenAwayFromCar = false
 
     var body: some View {
         TabView(selection: $selectedTab) {
@@ -66,6 +67,7 @@ struct ContentView: View {
         .onChange(of: engine.isActive) { _, isActive in
             if isActive {
                 nearCarPromptDismissed = false
+                hasBeenAwayFromCar = false
             }
         }
         .onAppear {
@@ -105,11 +107,19 @@ struct ContentView: View {
                 if let session = engine.session {
                     locationManager.updateDistanceToCar(carLocation: session.location)
 
-                    if let distance = locationManager.distanceToCar,
-                       distance < 50,
-                       !nearCarPromptDismissed,
-                       !showNearCarPrompt {
-                        showNearCarPrompt = true
+                    if let distance = locationManager.distanceToCar {
+                        // Track if user has walked away from car (>100m)
+                        if distance > 100 {
+                            hasBeenAwayFromCar = true
+                        }
+
+                        // Only prompt when user has been away AND returned close
+                        if distance < 50,
+                           hasBeenAwayFromCar,
+                           !nearCarPromptDismissed,
+                           !showNearCarPrompt {
+                            showNearCarPrompt = true
+                        }
                     }
                 }
             }
