@@ -77,6 +77,6 @@
 - [ ] Vehicle icon picker — choose car/bike/truck/motorcycle/scooter in Settings, shown on Start screen + Find Car + Live Activity
 
 ### P6 — Pro Discovery (from Tal, 2026-04-09)
-- [ ] Post-session Pro nudge — after ending a metered session, show dismissable inline card about smart alerts (once per N sessions)
-- [ ] Distance-based Pro hint — on Active Session when >200m from car, subtle "Pro tip: Smart Alerts account for walking time"
+- [x] Post-session Pro nudge — "Never get caught off guard" card on Start screen after 3+ metered sessions, dismissable with X, resets each app launch (Run 13)
+- [x] Distance-based Pro hint — on Active Session when >200m from car, subtle "Pro tip: Smart Alerts account for walking time" linking to UpgradeView (Run 13)
 - [ ] First-use Pro education — on first app launch, brief onboarding card showing free vs Pro value (not a paywall, just info)

@@ -148,6 +148,26 @@ struct ActiveSessionView: View {
                 .clipShape(RoundedRectangle(cornerRadius: 12))
             }
 
+            // Pro hint when far from car
+            if let distance = locationManager.distanceToCar,
+               distance > 200,
+               !StoreManager.shared.isProUnlocked {
+                NavigationLink {
+                    UpgradeView()
+                } label: {
+                    HStack(spacing: 8) {
+                        Image(systemName: "sparkles")
+                            .font(.caption)
+                            .foregroundStyle(Color(hex: "#fbbf24"))
+                        Text("Pro tip: Smart Alerts account for your walking time")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 8)
+                }
+            }
+
             // Location
             if let session = engine.session, let address = session.location.address {
                 infoCard(

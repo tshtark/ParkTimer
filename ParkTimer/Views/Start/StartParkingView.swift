@@ -15,6 +15,7 @@ struct StartParkingView: View {
     @State private var photoData: Data?
     @State private var geocodedAddress: String?
     @State private var isGeocodingAddress = false
+    @State private var proNudgeDismissed = false
 
     private let presets: [(String, TimeInterval)] = [
         ("15m", 15 * 60),
@@ -29,6 +30,7 @@ struct StartParkingView: View {
                 VStack(spacing: 24) {
                     headerSection
                     warningBanners
+                    proNudgeCard
                     quickRestartSection
                     durationSection
                     locationSection
@@ -50,6 +52,58 @@ struct StartParkingView: View {
         .onAppear {
             locationManager.requestLocation()
             geocodeCurrentLocation()
+        }
+    }
+
+    // MARK: - Pro Nudge
+
+    private var shouldShowProNudge: Bool {
+        guard !StoreManager.shared.isProUnlocked else { return false }
+        guard !proNudgeDismissed else { return false }
+        let meteredCount = historyStore.sessions.filter(\.isMetered).count
+        return meteredCount >= 3
+    }
+
+    @ViewBuilder
+    private var proNudgeCard: some View {
+        if shouldShowProNudge {
+            HStack(spacing: 12) {
+                Image(systemName: "sparkles")
+                    .font(.title3)
+                    .foregroundStyle(Color(hex: "#fbbf24"))
+
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Never get caught off guard")
+                        .font(.subheadline.weight(.semibold))
+                    Text("Pro alerts know how far you are and warn you in time to walk back.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+
+                Spacer(minLength: 0)
+
+                VStack(spacing: 8) {
+                    Button {
+                        proNudgeDismissed = true
+                    } label: {
+                        Image(systemName: "xmark")
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
+                    }
+
+                    NavigationLink {
+                        UpgradeView()
+                    } label: {
+                        Text("Learn more")
+                            .font(.caption.bold())
+                            .foregroundStyle(Color(hex: "#4ade80"))
+                    }
+                }
+            }
+            .padding(12)
+            .background(Color(hex: "#fbbf24").opacity(0.08))
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .transition(.opacity.combined(with: .move(edge: .top)))
         }
     }
 
