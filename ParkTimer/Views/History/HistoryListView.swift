@@ -47,28 +47,48 @@ struct HistoryListView: View {
 
     private var sessionList: some View {
         List {
-            ForEach(Array(historyStore.sessions.enumerated()), id: \.element.id) { index, session in
-                Button {
-                    if isPro || index < 3 {
+            // Unlocked items (deletable)
+            if isPro {
+                ForEach(Array(historyStore.sessions.enumerated()), id: \.element.id) { index, session in
+                    Button {
                         selectedSession = session
+                    } label: {
+                        sessionRow(session: session, isLocked: false)
                     }
-                } label: {
-                    sessionRow(session: session, index: index)
+                    .listRowBackground(Color(.systemBackground))
                 }
-                .listRowBackground(Color(.systemBackground))
-            }
-            .onDelete { offsets in
-                historyStore.delete(at: offsets)
-            }
+                .onDelete { offsets in
+                    historyStore.delete(at: offsets)
+                }
+            } else {
+                // Free: first 3 unlocked (deletable)
+                ForEach(Array(historyStore.sessions.prefix(3).enumerated()), id: \.element.id) { _, session in
+                    Button {
+                        selectedSession = session
+                    } label: {
+                        sessionRow(session: session, isLocked: false)
+                    }
+                    .listRowBackground(Color(.systemBackground))
+                }
+                .onDelete { offsets in
+                    historyStore.delete(at: offsets)
+                }
 
-            if !isPro && historyStore.sessions.count > 3 {
-                upgradePrompt
+                // Free: next 3 blurred (not deletable, not tappable)
+                ForEach(Array(historyStore.sessions.dropFirst(3).prefix(3).enumerated()), id: \.element.id) { _, session in
+                    sessionRow(session: session, isLocked: true)
+                        .listRowBackground(Color(.systemBackground))
+                }
+
+                if historyStore.sessions.count > 3 {
+                    upgradePrompt
+                }
             }
         }
         .listStyle(.plain)
     }
 
-    private func sessionRow(session: ParkingSession, index: Int) -> some View {
+    private func sessionRow(session: ParkingSession, isLocked: Bool) -> some View {
         HStack {
             VStack(alignment: .leading, spacing: 4) {
                 Text(session.formattedAddress)
@@ -107,7 +127,7 @@ struct HistoryListView: View {
 
             Spacer()
 
-            if !isPro && index >= 3 {
+            if isLocked {
                 Image(systemName: "lock.fill")
                     .foregroundStyle(.secondary)
             } else {
@@ -117,7 +137,7 @@ struct HistoryListView: View {
             }
         }
         .padding(.vertical, 4)
-        .blur(radius: !isPro && index >= 3 ? 4 : 0)
+        .blur(radius: isLocked ? 4 : 0)
     }
 
     private var upgradePrompt: some View {

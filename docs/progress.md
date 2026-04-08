@@ -72,6 +72,6 @@
 
 ### P5 — User Feedback (from Tal, 2026-04-09)
 - [ ] Custom duration: replace wheel picker with native hour+minute DatePicker or typed input
-- [ ] History: limit free tier to 3 real + 3 blurred items (not entire history), disable swipe-to-delete on blurred items
+- [x] History: limit free tier to 3 real + 3 blurred items, disable swipe-to-delete on blurred items (Run 12)
 - [ ] Share car location — share sheet with pin + address for "my partner needs to find the car"
 - [ ] Vehicle icon picker — choose car/bike/truck/motorcycle/scooter in Settings, shown on Start screen + Find Car + Live Activity
