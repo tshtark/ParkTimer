@@ -69,3 +69,9 @@
 - [x] Walking ETA in warning notification text — shows "It's about a X-minute walk back" when walking time >1 min (Run 10)
 - [x] Request App Store review after 3rd completed session — triggers at 3rd, 10th, 25th session with 1s delay, in both end-session paths (Run 10)
 - [ ] Countdown color gradient on progress bar
+
+### P5 — User Feedback (from Tal, 2026-04-09)
+- [ ] Custom duration: replace wheel picker with native hour+minute DatePicker or typed input
+- [ ] History: limit free tier to 3 real + 3 blurred items (not entire history), disable swipe-to-delete on blurred items
+- [ ] Share car location — share sheet with pin + address for "my partner needs to find the car"
+- [ ] Vehicle icon picker — choose car/bike/truck/motorcycle/scooter in Settings, shown on Start screen + Find Car + Live Activity
