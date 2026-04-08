@@ -33,12 +33,12 @@
 
 ### P0 — PRD Gaps
 - [ ] Alert sound picker (Pro feature) — NOT IMPLEMENTED
-- [ ] Photo thumbnail in Active Session view
+- [x] Photo thumbnail in Active Session view — added loadPhoto + Image display (Run 1)
 - [ ] Verify Live Activity renders on lock screen
-- [ ] Session restore after app kill/relaunch
+- [x] Session restore after app kill/relaunch — VERIFIED: killed app at 59:57, relaunched, resumed at 59:31 (Run 1)
 - [ ] Auto-suggest "End Parking" when user returns near car (<50m)
-- [ ] Verify history blurred items + upgrade prompt for free tier (visual check)
-- [ ] Expired sessions in history marked red
+- [x] Verify history blurred items + upgrade prompt for free tier — VERIFIED: items 4+ blurred, lock icon, upgrade prompt with $4.99 button (Run 1)
+- [x] Expired sessions in history marked red — added red badge + warning triangle for expired sessions (Run 1)
 
 ### P1 — Robustness
 - [ ] Location permission denied — graceful handling

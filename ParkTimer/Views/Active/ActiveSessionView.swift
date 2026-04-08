@@ -136,7 +136,24 @@ struct ActiveSessionView: View {
             if let note = engine.session?.note, !note.isEmpty {
                 infoCard(icon: "note.text", title: "Note", value: note, color: .secondary)
             }
+
+            // Photo thumbnail
+            if let photoFilename = engine.session?.location.photoFilename,
+               let image = loadPhoto(filename: photoFilename) {
+                Image(uiImage: image)
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(height: 120)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+            }
         }
+    }
+
+    private func loadPhoto(filename: String) -> UIImage? {
+        let docs = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        let url = docs.appendingPathComponent("photos").appendingPathComponent(filename)
+        guard let data = try? Data(contentsOf: url) else { return nil }
+        return UIImage(data: data)
     }
 
     private func infoCard(icon: String, title: String, value: String, color: Color) -> some View {

@@ -71,12 +71,22 @@ struct HistoryListView: View {
                         .foregroundStyle(.secondary)
 
                     if session.isMetered {
+                        let wasExpired = session.endedDate.map { ended in
+                            session.meterEndDate.map { ended > $0 } ?? false
+                        } ?? false
+
                         Text(TimeFormatting.durationText(session.duration ?? 0))
                             .font(.caption.bold())
                             .padding(.horizontal, 6)
                             .padding(.vertical, 2)
-                            .background(Color(hex: "#4ade80").opacity(0.2))
+                            .background((wasExpired ? Color(hex: "#ff4a4a") : Color(hex: "#4ade80")).opacity(0.2))
                             .clipShape(Capsule())
+
+                        if wasExpired {
+                            Image(systemName: "exclamationmark.triangle.fill")
+                                .font(.caption2)
+                                .foregroundStyle(Color(hex: "#ff4a4a"))
+                        }
                     } else {
                         Text("Unmetered")
                             .font(.caption)
