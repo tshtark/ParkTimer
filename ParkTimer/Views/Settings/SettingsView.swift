@@ -69,6 +69,30 @@ struct SettingsView: View {
 
     private var soundSection: some View {
         Section("Sound & Haptics") {
+            if store.isProUnlocked {
+                NavigationLink {
+                    AlertSoundPicker(settings: settings)
+                } label: {
+                    HStack {
+                        Text("Alert Sound")
+                        Spacer()
+                        Text(settings.selectedAlertSound.displayName)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+            } else {
+                HStack {
+                    Label("Alert Sound", systemImage: "lock.fill")
+                    Spacer()
+                    Text("Pro")
+                        .font(.caption.bold())
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 2)
+                        .background(Color(hex: "#4ade80").opacity(0.2))
+                        .clipShape(Capsule())
+                }
+                .foregroundStyle(.secondary)
+            }
             Toggle("Sounds", isOn: $settings.isSoundEnabled)
             Toggle("Haptics", isOn: $settings.isHapticsEnabled)
         }

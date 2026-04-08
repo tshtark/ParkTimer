@@ -32,7 +32,7 @@
 ## Remaining Work (Priority Order)
 
 ### P0 — PRD Gaps
-- [ ] Alert sound picker (Pro feature) — NOT IMPLEMENTED
+- [x] Alert sound picker (Pro feature) — 5 sounds (Standard/Chime/Bell/Horn/Pulse), picker with preview, Pro-gated with lock icon (Run 3)
 - [x] Photo thumbnail in Active Session view — added loadPhoto + Image display (Run 1)
 - [ ] Verify Live Activity renders on lock screen
 - [x] Session restore after app kill/relaunch — VERIFIED: killed app at 59:57, relaunched, resumed at 59:31 (Run 1)

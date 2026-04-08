@@ -6,11 +6,29 @@ enum SoundEvent: String, CaseIterable {
     case tick = "tick"
 }
 
+enum AlertSound: String, CaseIterable, Codable {
+    case standard = "warning"       // default, uses warning.wav
+    case chime = "alert_chime"
+    case bell = "alert_bell"
+    case horn = "alert_horn"
+    case pulse = "alert_pulse"
+
+    var displayName: String {
+        switch self {
+        case .standard: "Standard"
+        case .chime: "Chime"
+        case .bell: "Bell"
+        case .horn: "Horn"
+        case .pulse: "Pulse"
+        }
+    }
+}
+
 @MainActor
 final class AudioManager {
     static let shared = AudioManager()
 
-    private var players: [SoundEvent: AVAudioPlayer] = [:]
+    private var players: [String: AVAudioPlayer] = [:]
 
     func configure() {
         do {
@@ -25,25 +43,44 @@ final class AudioManager {
 
     func play(_ event: SoundEvent) {
         guard SettingsManager.shared.isSoundEnabled else { return }
-        if let player = players[event] {
+
+        // For warning/expired events, use the selected alert sound if Pro
+        let filename: String
+        if (event == .warning || event == .expired) && StoreManager.shared.isProUnlocked {
+            filename = SettingsManager.shared.selectedAlertSound.rawValue
+        } else {
+            filename = event.rawValue
+        }
+
+        if let player = players[filename] {
             player.currentTime = 0
             player.play()
         }
     }
 
+    func preview(_ sound: AlertSound) {
+        guard let player = players[sound.rawValue] else { return }
+        player.currentTime = 0
+        player.play()
+    }
+
     private func preloadSounds() {
-        for event in SoundEvent.allCases {
-            guard let url = Bundle.main.url(forResource: event.rawValue, withExtension: "wav") else {
-                print("[AudioManager] Missing: \(event.rawValue).wav")
+        // Load default event sounds
+        let filenames = SoundEvent.allCases.map(\.rawValue) + AlertSound.allCases.map(\.rawValue)
+        let uniqueFilenames = Set(filenames)
+
+        for name in uniqueFilenames {
+            guard let url = Bundle.main.url(forResource: name, withExtension: "wav") else {
+                print("[AudioManager] Missing: \(name).wav")
                 continue
             }
             do {
                 let player = try AVAudioPlayer(contentsOf: url)
                 player.prepareToPlay()
-                player.volume = event == .tick ? 0.4 : 0.8
-                players[event] = player
+                player.volume = (name == "tick") ? 0.4 : 0.8
+                players[name] = player
             } catch {
-                print("[AudioManager] Load failed \(event): \(error)")
+                print("[AudioManager] Load failed \(name): \(error)")
             }
         }
     }

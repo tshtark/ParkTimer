@@ -9,6 +9,7 @@ final class SettingsManager {
     private static let keyHaptics = "settings.hapticsEnabled"
     private static let keyAlertMinutes = "settings.alertMinutes"
     private static let keySmartAlerts = "settings.smartAlerts"
+    private static let keyAlertSound = "settings.alertSound"
 
     var isSoundEnabled: Bool {
         didSet { UserDefaults.standard.set(isSoundEnabled, forKey: Self.keySound) }
@@ -26,6 +27,10 @@ final class SettingsManager {
         didSet { UserDefaults.standard.set(isSmartAlertsEnabled, forKey: Self.keySmartAlerts) }
     }
 
+    var selectedAlertSound: AlertSound {
+        didSet { UserDefaults.standard.set(selectedAlertSound.rawValue, forKey: Self.keyAlertSound) }
+    }
+
     private init() {
         let defaults = UserDefaults.standard
 
@@ -41,5 +46,6 @@ final class SettingsManager {
         isHapticsEnabled = defaults.bool(forKey: Self.keyHaptics)
         alertMinutesBefore = defaults.integer(forKey: Self.keyAlertMinutes)
         isSmartAlertsEnabled = defaults.bool(forKey: Self.keySmartAlerts)
+        selectedAlertSound = AlertSound(rawValue: defaults.string(forKey: Self.keyAlertSound) ?? "") ?? .standard
     }
 }
