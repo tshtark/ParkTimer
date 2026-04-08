@@ -108,11 +108,15 @@
 ### Ready (cont.)
 - [x] App Store screenshots captured — 5 screens in docs/screenshots/ (Run 27)
 
+### Ready (cont.)
+- [x] Privacy policy draft — docs/privacy-policy.md, "Data Not Collected", zero network (Run 28)
+- [x] Improved alert sounds — warning (two-tone rising), expired (pulsing alarm), tick (subtle click) (Run 28)
+
 ### Needs Tal
 - [ ] App Store Connect setup (new app listing)
-- [ ] Privacy policy URL (GitHub Pages like RoundTimer)
-- [ ] App Store screenshots (6.7" + 6.5" + iPad letterboxed)
-- [ ] Replace placeholder .wav sound files with real recorded sounds
+- [ ] Host privacy policy (GitHub Pages from docs/privacy-policy.md, update URL in SettingsView)
+- [ ] Resize screenshots for App Store (6.7": 1284x2778, iPad: letterboxed)
+- [ ] Optionally replace .wav files with professionally recorded sounds
 - [ ] Test on real device (Tal's iPhone via USB)
 - [ ] Archive + upload: see CLAUDE.md for commands
 - [ ] Review app description / keywords / subtitle in App Store Connect
