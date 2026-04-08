@@ -74,7 +74,7 @@
 - [x] Custom duration: replaced single 96-item wheel with two-component hours (0-8) + minutes (0/5/10/15/20/30/45) picker, summary text, disabled state for 0h 0m (Run 14)
 - [x] History: limit free tier to 3 real + 3 blurred items, disable swipe-to-delete on blurred items (Run 12)
 - [x] Share car location — Share button on Find Car with Apple Maps URL + address text, side-by-side with Directions (Run 15)
-- [ ] Vehicle icon picker — choose car/bike/truck/motorcycle/scooter in Settings, shown on Start screen + Find Car + Live Activity
+- [x] Vehicle icon picker — 5 vehicle types (car/bike/truck/motorcycle/scooter) in Settings, updates Start screen header + Find Car map pin label + icon (Run 16)
 
 ### P6 — Pro Discovery (from Tal, 2026-04-09)
 - [x] Post-session Pro nudge — "Never get caught off guard" card on Start screen after 3+ metered sessions, dismissable with X, resets each app launch (Run 13)

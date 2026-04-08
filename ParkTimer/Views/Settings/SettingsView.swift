@@ -9,6 +9,7 @@ struct SettingsView: View {
             List {
                 alertsSection
                 soundSection
+                vehicleSection
                 proSection
                 aboutSection
             }
@@ -95,6 +96,31 @@ struct SettingsView: View {
             }
             Toggle("Sounds", isOn: $settings.isSoundEnabled)
             Toggle("Haptics", isOn: $settings.isHapticsEnabled)
+        }
+    }
+
+    // MARK: - Vehicle
+
+    private var vehicleSection: some View {
+        Section("Vehicle") {
+            ForEach(VehicleType.allCases, id: \.self) { vehicle in
+                Button {
+                    settings.vehicleType = vehicle
+                } label: {
+                    HStack {
+                        Image(systemName: vehicle.iconName)
+                            .font(.title3)
+                            .frame(width: 32)
+                        Text(vehicle.displayName)
+                            .foregroundStyle(.primary)
+                        Spacer()
+                        if settings.vehicleType == vehicle {
+                            Image(systemName: "checkmark")
+                                .foregroundStyle(Color(hex: "#4ade80"))
+                        }
+                    }
+                }
+            }
         }
     }
 

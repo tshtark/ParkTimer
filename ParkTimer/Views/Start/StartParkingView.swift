@@ -228,7 +228,7 @@ struct StartParkingView: View {
 
     private var headerSection: some View {
         VStack(spacing: 8) {
-            Image(systemName: "car.fill")
+            Image(systemName: SettingsManager.shared.vehicleType.iconName)
                 .font(.system(size: 48))
                 .foregroundStyle(Color(hex: "#4ade80"))
 

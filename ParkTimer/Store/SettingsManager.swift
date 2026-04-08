@@ -10,6 +10,7 @@ final class SettingsManager {
     private static let keyAlertMinutes = "settings.alertMinutes"
     private static let keySmartAlerts = "settings.smartAlerts"
     private static let keyAlertSound = "settings.alertSound"
+    private static let keyVehicleType = "settings.vehicleType"
 
     var isSoundEnabled: Bool {
         didSet { UserDefaults.standard.set(isSoundEnabled, forKey: Self.keySound) }
@@ -31,6 +32,10 @@ final class SettingsManager {
         didSet { UserDefaults.standard.set(selectedAlertSound.rawValue, forKey: Self.keyAlertSound) }
     }
 
+    var vehicleType: VehicleType {
+        didSet { UserDefaults.standard.set(vehicleType.rawValue, forKey: Self.keyVehicleType) }
+    }
+
     private init() {
         let defaults = UserDefaults.standard
 
@@ -47,5 +52,6 @@ final class SettingsManager {
         alertMinutesBefore = defaults.integer(forKey: Self.keyAlertMinutes)
         isSmartAlertsEnabled = defaults.bool(forKey: Self.keySmartAlerts)
         selectedAlertSound = AlertSound(rawValue: defaults.string(forKey: Self.keyAlertSound) ?? "") ?? .standard
+        vehicleType = VehicleType(rawValue: defaults.string(forKey: Self.keyVehicleType) ?? "") ?? .car
     }
 }

@@ -27,8 +27,8 @@ struct FindCarView: View {
         VStack(spacing: 0) {
             Map(position: $cameraPosition) {
                 // Car pin
-                Annotation("My Car", coordinate: session.location.coordinate) {
-                    Image(systemName: "car.fill")
+                Annotation("My \(SettingsManager.shared.vehicleType.displayName)", coordinate: session.location.coordinate) {
+                    Image(systemName: SettingsManager.shared.vehicleType.iconName)
                         .font(.title2)
                         .foregroundStyle(.white)
                         .padding(8)
