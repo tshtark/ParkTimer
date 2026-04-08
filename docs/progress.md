@@ -79,4 +79,4 @@
 ### P6 — Pro Discovery (from Tal, 2026-04-09)
 - [x] Post-session Pro nudge — "Never get caught off guard" card on Start screen after 3+ metered sessions, dismissable with X, resets each app launch (Run 13)
 - [x] Distance-based Pro hint — on Active Session when >200m from car, subtle "Pro tip: Smart Alerts account for walking time" linking to UpgradeView (Run 13)
-- [ ] First-use Pro education — on first app launch, brief onboarding card showing free vs Pro value (not a paywall, just info)
+- [x] First-use Pro education — Welcome sheet on first launch with free feature bullets + Pro teaser, "Get Started" button, never shows again (Run 17)

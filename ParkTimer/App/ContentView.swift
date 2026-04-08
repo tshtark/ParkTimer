@@ -10,6 +10,7 @@ struct ContentView: View {
     @State private var showNearCarPrompt = false
     @State private var nearCarPromptDismissed = false
     @State private var hasBeenAwayFromCar = false
+    @State private var showWelcome = !UserDefaults.standard.bool(forKey: "hasSeenWelcome")
     @Environment(\.requestReview) private var requestReview
 
     var body: some View {
@@ -50,6 +51,12 @@ struct ContentView: View {
                 .tag(3)
         }
         .tint(Color(hex: "#4ade80"))
+        .sheet(isPresented: $showWelcome) {
+            WelcomeSheet {
+                UserDefaults.standard.set(true, forKey: "hasSeenWelcome")
+                showWelcome = false
+            }
+        }
         .alert("Back at your car?", isPresented: $showNearCarPrompt) {
             Button("End Parking", role: .destructive) {
                 if let completed = engine.stop() {
