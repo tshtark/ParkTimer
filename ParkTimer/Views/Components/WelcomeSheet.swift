@@ -37,7 +37,7 @@ struct WelcomeSheet: View {
                 VStack(alignment: .leading, spacing: 2) {
                     Text("ParkTimer Pro")
                         .font(.subheadline.bold())
-                    Text("Smart alerts based on walking distance, custom timing, full history, and more.")
+                    Text("Smart alerts, parking cost tracking, monthly stats, custom timing, and full history.")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }

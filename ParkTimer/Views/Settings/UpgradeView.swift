@@ -46,6 +46,12 @@ struct UpgradeView: View {
             featureRow(icon: "clock.arrow.circlepath", title: "Full History",
                        description: "Access all your past parking sessions")
 
+            featureRow(icon: "dollarsign.circle.fill", title: "Parking Cost Tracker",
+                       description: "Track what you spend — per session and monthly totals")
+
+            featureRow(icon: "chart.bar.fill", title: "Monthly Statistics",
+                       description: "Sessions, hours parked, and total cost at a glance")
+
             featureRow(icon: "plus.circle.fill", title: "Extend Time",
                        description: "Add time to a running meter without restarting")
 
