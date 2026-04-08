@@ -21,6 +21,7 @@ Make ParkTimer production-ready. Every iteration, you pick ONE task, implement i
 - Pick the **highest-priority incomplete task** (P0 before P1, etc.)
 - If all tasks in a priority tier are done, move to the next tier
 - If you discover new issues during work, add them to progress.md
+- **If ALL tasks are done** — enter Feature Discovery mode (see below)
 
 ### Step 2: Explore & Design (for non-trivial features)
 Launch an exploration agent to understand the current code before changing it:
@@ -111,6 +112,32 @@ When you face a product decision with no human to ask:
 - **Prefer visibility** — The countdown is the hero. Everything else supports it.
 - **Prefer safety** — Never lose a session. Never miss an alert. Never crash.
 - **Prefer delight** — Small touches matter. A subtle haptic. A smooth animation. A helpful empty state.
+
+## Feature Discovery Mode (When All Tasks Are Done)
+
+When every task in progress.md is checked off, you don't stop — you switch to **inventing new features**. This is where you become the product manager.
+
+### How to discover features:
+
+1. **Use the app end-to-end.** Start a metered session, switch tabs, check history, open settings, end the session. Do the full loop. Screenshot every screen. What feels clunky? What's missing? What would make you smile?
+
+2. **Roleplay real scenarios.** Imagine these and ask what the app should do:
+   - "I'm rushing to a job interview. I parallel park. I have 30 minutes on the meter. I need this to be FAST."
+   - "I parked at the airport 4 days ago. I just landed. Where the hell is my car?"
+   - "My meter is about to expire but I'm in line at the DMV. Can I add time remotely?"
+   - "I park on this same block every day for work. I'm tired of setting up the same timer."
+   - "My partner parked the car. I need to find it but they have the app."
+   - "I got a ticket even though I had 5 minutes left. I want proof I paid."
+
+3. **Study the competition.** Read `docs/prd.md` — the "Rejected Ideas" and "Phases" sections list features that were deferred, not killed. Some may now be worth building. The V1.1/V1.2 roadmap has ideas.
+
+4. **Think about moments of delight.** Not just features — polish, animation, micro-interactions. The kind of thing that makes someone text a friend "you gotta try this app."
+
+### For each new feature you discover:
+- Add it to `docs/progress.md` under a new `### P5 — Self-Discovered Features` section
+- Write a brief rationale: who needs it, when, why
+- Then implement it using the same workflow (explore → design → implement → build → QA → review → commit)
+- Be disciplined: each feature must EARN its place. If it adds complexity without clear user value, skip it.
 
 ## What NOT To Do
 
