@@ -50,11 +50,11 @@
 ### P2 — UI/UX Polish
 - [x] Dark mode support and testing — all screens verified in dark mode, semantic colors work correctly, green accent pops on dark bg (Run 5)
 - [x] Smooth animations (countdown transitions, progress bar, color changes) — pulse on state change, animated color transitions (Run 6)
-- [ ] Visual hierarchy improvements on Active Session
+- [x] Visual hierarchy improvements on Active Session — prominent expiry card with tinted bg, combined distance/walking card, hidden when at car (<10m) (Run 7)
 - [x] Color transition as timer green→yellow→red — animated via .animation(.easeInOut) on state, pulse scale effect on transition (Run 6)
 - [x] Better empty states (Find Car, History) — centered layout, descriptive text, themed icons (Run 6)
 - [x] Swipe-to-delete on History items — .onDelete with HistoryStore.delete(at:), tested (Run 6)
-- [ ] Pull-to-refresh gestures where appropriate
+- [x] Pull-to-refresh gestures — N/A, all data is local, no remote refresh needed (Run 7)
 
 ### P3 — Production Readiness
 - [ ] Build with zero warnings

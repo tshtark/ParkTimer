@@ -98,33 +98,55 @@ struct ActiveSessionView: View {
 
     private var infoCardsSection: some View {
         VStack(spacing: 12) {
+            // Expiry — prominent card
             if let session = engine.session, session.isMetered, let endDate = session.meterEndDate {
-                infoCard(
-                    icon: "clock.fill",
-                    title: "Expires at",
-                    value: endDate.formatted(date: .omitted, time: .shortened),
-                    color: engine.state.color
-                )
+                HStack {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Expires at")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                        Text(endDate.formatted(date: .omitted, time: .shortened))
+                            .font(.title2.bold())
+                    }
+                    Spacer()
+                    Image(systemName: "clock.fill")
+                        .font(.title2)
+                        .foregroundStyle(engine.state.color)
+                }
+                .padding()
+                .background(engine.state.color.opacity(0.08))
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+                .animation(.easeInOut(duration: 0.5), value: engine.state)
             }
 
-            if let distance = locationManager.distanceToCar {
-                infoCard(
-                    icon: "figure.walk",
-                    title: "Distance to car",
-                    value: TimeFormatting.distanceText(distance),
-                    color: .blue
-                )
+            // Distance + walking time — combined, hidden when at car
+            if let distance = locationManager.distanceToCar, distance > 10 {
+                HStack(spacing: 16) {
+                    Image(systemName: "figure.walk")
+                        .foregroundStyle(.blue)
+                        .frame(width: 28)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Distance to car")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                        HStack(spacing: 8) {
+                            Text(TimeFormatting.distanceText(distance))
+                                .font(.subheadline.weight(.medium))
+                            if let walkingMin = locationManager.walkingMinutesToCar {
+                                Text("·  \(Int(ceil(walkingMin))) min walk")
+                                    .font(.subheadline)
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                    }
+                    Spacer()
+                }
+                .padding()
+                .background(Color(.systemGray6))
+                .clipShape(RoundedRectangle(cornerRadius: 12))
             }
 
-            if let walkingMin = locationManager.walkingMinutesToCar {
-                infoCard(
-                    icon: "timer",
-                    title: "Walking time",
-                    value: "\(Int(ceil(walkingMin))) min",
-                    color: .blue
-                )
-            }
-
+            // Location
             if let session = engine.session, let address = session.location.address {
                 infoCard(
                     icon: "mappin.circle.fill",
@@ -134,6 +156,7 @@ struct ActiveSessionView: View {
                 )
             }
 
+            // Note
             if let note = engine.session?.note, !note.isEmpty {
                 infoCard(icon: "note.text", title: "Note", value: note, color: .secondary)
             }
