@@ -6,6 +6,8 @@ struct ContentView: View {
     @State private var historyStore = HistoryStore()
     @State private var locationManager = LocationManager()
     @State private var selectedTab = 0
+    @State private var showNearCarPrompt = false
+    @State private var nearCarPromptDismissed = false
 
     var body: some View {
         TabView(selection: $selectedTab) {
@@ -44,6 +46,28 @@ struct ContentView: View {
                 .tag(3)
         }
         .tint(Color(hex: "#4ade80"))
+        .alert("Back at your car?", isPresented: $showNearCarPrompt) {
+            Button("End Parking", role: .destructive) {
+                if let completed = engine.stop() {
+                    historyStore.add(completed)
+                }
+                sessionStore.clear()
+                ParkingActivityManager.shared.end()
+                AlertManager.shared.cancelAll()
+                HapticManager.shared.successFeedback()
+                nearCarPromptDismissed = true
+            }
+            Button("Not yet", role: .cancel) {
+                nearCarPromptDismissed = true
+            }
+        } message: {
+            Text("It looks like you're near your car. Would you like to end your parking session?")
+        }
+        .onChange(of: engine.isActive) { _, isActive in
+            if isActive {
+                nearCarPromptDismissed = false
+            }
+        }
         .onAppear {
             AudioManager.shared.configure()
             HapticManager.shared.prepare()
@@ -77,9 +101,16 @@ struct ContentView: View {
                     ParkingActivityManager.shared.update(state: engine.state, session: session)
                 }
 
-                // Update distance to car
+                // Update distance to car + auto-suggest end
                 if let session = engine.session {
                     locationManager.updateDistanceToCar(carLocation: session.location)
+
+                    if let distance = locationManager.distanceToCar,
+                       distance < 50,
+                       !nearCarPromptDismissed,
+                       !showNearCarPrompt {
+                        showNearCarPrompt = true
+                    }
                 }
             }
 

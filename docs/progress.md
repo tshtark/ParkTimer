@@ -36,7 +36,7 @@
 - [x] Photo thumbnail in Active Session view — added loadPhoto + Image display (Run 1)
 - [ ] Verify Live Activity renders on lock screen
 - [x] Session restore after app kill/relaunch — VERIFIED: killed app at 59:57, relaunched, resumed at 59:31 (Run 1)
-- [ ] Auto-suggest "End Parking" when user returns near car (<50m)
+- [x] Auto-suggest "End Parking" when user returns near car (<50m) — alert with "Back at your car?" when distance < 50m, dismissable, no nagging (Run 2)
 - [x] Verify history blurred items + upgrade prompt for free tier — VERIFIED: items 4+ blurred, lock icon, upgrade prompt with $4.99 button (Run 1)
 - [x] Expired sessions in history marked red — added red badge + warning triangle for expired sessions (Run 1)
 
