@@ -16,7 +16,7 @@ struct StartParkingView: View {
     @State private var geocodedAddress: String?
     @State private var isGeocodingAddress = false
     @State private var proNudgeDismissed = false
-    @State private var hourlyRateText: String = ""
+    @State private var hourlyRateText: String = SettingsManager.shared.lastHourlyRate
 
     private let presets: [(String, TimeInterval)] = [
         ("15m", 15 * 60),
@@ -160,7 +160,8 @@ struct StartParkingView: View {
             location: loc,
             note: nil,
             alertMinutes: settings.alertMinutesBefore,
-            smartAlert: settings.isSmartAlertsEnabled && StoreManager.shared.isProUnlocked
+            smartAlert: settings.isSmartAlertsEnabled && StoreManager.shared.isProUnlocked,
+            hourlyRate: session.hourlyRate
         )
 
         if let newSession = engine.session {
@@ -420,6 +421,9 @@ struct StartParkingView: View {
 
         let settings = SettingsManager.shared
         let rate = Double(hourlyRateText)
+        if !hourlyRateText.isEmpty {
+            settings.lastHourlyRate = hourlyRateText
+        }
         engine.startMetered(
             duration: duration,
             location: loc,

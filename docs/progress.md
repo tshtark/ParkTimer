@@ -87,3 +87,4 @@
 - [x] Parking cost tracker (Pro) — optional hourly rate field on Start screen, real-time "Cost so far" card on Active Session, total cost in History row. Compounds in value over time. (Run 21)
 - [x] Monthly parking statistics (Pro) — "This Month" card at top of History showing sessions/hours/cost. Blurred for free users with "Unlock Stats" button → UpgradeView. (Run 22)
 - [x] Update UpgradeView + WelcomeSheet with new Pro features — added Parking Cost Tracker + Monthly Statistics to feature list, updated welcome Pro teaser text (Run 23)
+- [x] Remember last hourly rate — pre-fills rate field from previous session, Quick Restart carries rate forward. Zero friction for daily parkers. (Run 24)
