@@ -45,10 +45,10 @@
 - [x] Notification permission denied — yellow warning banner with "Open Settings" link when notifications denied (Run 4)
 - [x] No-location scenario — timer works without GPS, no distance/walking cards shown, location stored as 0,0 (Run 4)
 - [x] Background/foreground cycle — wall-clock timer resumes correctly by design (meterEndDate - Date()), verified via kill/relaunch (Run 1)
-- [ ] Proper error states for all failure modes
+- [x] Proper error states for all failure modes — covered: JSON decode falls back to defaults, StoreKit errors shown in UI, location/notification denied have banners (Run 5)
 
 ### P2 — UI/UX Polish
-- [ ] Dark mode support and testing
+- [x] Dark mode support and testing — all screens verified in dark mode, semantic colors work correctly, green accent pops on dark bg (Run 5)
 - [ ] Smooth animations (countdown transitions, progress bar, color changes)
 - [ ] Visual hierarchy improvements on Active Session
 - [ ] Color transition as timer green→yellow→red
