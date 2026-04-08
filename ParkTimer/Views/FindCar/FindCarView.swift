@@ -92,16 +92,28 @@ struct FindCarView: View {
                         .clipShape(RoundedRectangle(cornerRadius: 8))
                 }
 
-                Button {
-                    openInMaps(location: session.location)
-                } label: {
-                    Label("Open in Apple Maps", systemImage: "arrow.triangle.turn.up.right.diamond.fill")
-                        .font(.headline)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 12)
-                        .background(Color(hex: "#4ade80"))
-                        .foregroundStyle(.black)
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                HStack(spacing: 12) {
+                    Button {
+                        openInMaps(location: session.location)
+                    } label: {
+                        Label("Directions", systemImage: "arrow.triangle.turn.up.right.diamond.fill")
+                            .font(.headline)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 12)
+                            .background(Color(hex: "#4ade80"))
+                            .foregroundStyle(.black)
+                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                    }
+
+                    ShareLink(item: shareText(for: session)) {
+                        Label("Share", systemImage: "square.and.arrow.up")
+                            .font(.headline)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 12)
+                            .background(Color(.systemGray5))
+                            .foregroundStyle(.primary)
+                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                    }
                 }
             }
             .padding()
@@ -143,6 +155,18 @@ struct FindCarView: View {
     }
 
     // MARK: - Helpers
+
+    private func shareText(for session: ParkingSession) -> String {
+        let address = session.formattedAddress
+        let lat = session.location.latitude
+        let lng = session.location.longitude
+        let mapsURL = "https://maps.apple.com/?ll=\(lat),\(lng)&q=My%20Car"
+
+        if let note = session.note, !note.isEmpty {
+            return "My car is parked at \(address) (\(note))\n\(mapsURL)"
+        }
+        return "My car is parked at \(address)\n\(mapsURL)"
+    }
 
     private func openInMaps(location: ParkingLocation) {
         let placemark = MKPlacemark(coordinate: location.coordinate)

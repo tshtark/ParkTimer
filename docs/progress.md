@@ -73,7 +73,7 @@
 ### P5 — User Feedback (from Tal, 2026-04-09)
 - [x] Custom duration: replaced single 96-item wheel with two-component hours (0-8) + minutes (0/5/10/15/20/30/45) picker, summary text, disabled state for 0h 0m (Run 14)
 - [x] History: limit free tier to 3 real + 3 blurred items, disable swipe-to-delete on blurred items (Run 12)
-- [ ] Share car location — share sheet with pin + address for "my partner needs to find the car"
+- [x] Share car location — Share button on Find Car with Apple Maps URL + address text, side-by-side with Directions (Run 15)
 - [ ] Vehicle icon picker — choose car/bike/truck/motorcycle/scooter in Settings, shown on Start screen + Find Car + Live Activity
 
 ### P6 — Pro Discovery (from Tal, 2026-04-09)
