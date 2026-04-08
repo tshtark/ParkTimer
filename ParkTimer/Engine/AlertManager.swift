@@ -40,7 +40,11 @@ final class AlertManager {
 
         let content = UNMutableNotificationContent()
         content.title = "Meter Expiring Soon!"
-        content.body = "Your parking meter expires in \(Int(leadMinutes)) minutes. Head back to your car!"
+        if let walking = walkingMinutes, walking > 1 {
+            content.body = "Your meter expires in \(Int(leadMinutes)) min. It's about a \(Int(ceil(walking)))-minute walk back to your car."
+        } else {
+            content.body = "Your parking meter expires in \(Int(leadMinutes)) minutes. Head back to your car!"
+        }
         content.sound = .default
         content.interruptionLevel = .timeSensitive
 

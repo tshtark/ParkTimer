@@ -1,4 +1,5 @@
 import SwiftUI
+import StoreKit
 
 struct ActiveSessionView: View {
     let engine: ParkingEngine
@@ -6,6 +7,7 @@ struct ActiveSessionView: View {
     let historyStore: HistoryStore
     let locationManager: LocationManager
 
+    @Environment(\.requestReview) private var requestReview
     @State private var showEndConfirmation = false
     @State private var showExtendSheet = false
 
@@ -241,6 +243,15 @@ struct ActiveSessionView: View {
         ParkingActivityManager.shared.end()
         AlertManager.shared.cancelAll()
         HapticManager.shared.successFeedback()
+
+        // Request review at milestones: 3rd, 10th, 25th session
+        let count = historyStore.sessions.count
+        if count == 3 || count == 10 || count == 25 {
+            Task { @MainActor in
+                try? await Task.sleep(for: .seconds(1))
+                requestReview()
+            }
+        }
     }
 
     private func extendTime(minutes: Int) {

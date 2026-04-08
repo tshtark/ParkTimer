@@ -1,4 +1,5 @@
 import SwiftUI
+import StoreKit
 
 struct ContentView: View {
     @State private var engine = ParkingEngine()
@@ -9,6 +10,7 @@ struct ContentView: View {
     @State private var showNearCarPrompt = false
     @State private var nearCarPromptDismissed = false
     @State private var hasBeenAwayFromCar = false
+    @Environment(\.requestReview) private var requestReview
 
     var body: some View {
         TabView(selection: $selectedTab) {
@@ -57,6 +59,14 @@ struct ContentView: View {
                 AlertManager.shared.cancelAll()
                 HapticManager.shared.successFeedback()
                 nearCarPromptDismissed = true
+                // Request review at milestones
+                let count = historyStore.sessions.count
+                if count == 3 || count == 10 || count == 25 {
+                    Task { @MainActor in
+                        try? await Task.sleep(for: .seconds(1))
+                        requestReview()
+                    }
+                }
             }
             Button("Not yet", role: .cancel) {
                 nearCarPromptDismissed = true

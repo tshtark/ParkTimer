@@ -66,6 +66,6 @@
 
 ### P4 — User-Driven Features
 - [ ] "Quick restart" — one-tap same duration at same location
-- [ ] Walking ETA in warning notification text
-- [ ] Request App Store review after 3rd completed session
+- [x] Walking ETA in warning notification text — shows "It's about a X-minute walk back" when walking time >1 min (Run 10)
+- [x] Request App Store review after 3rd completed session — triggers at 3rd, 10th, 25th session with 1s delay, in both end-session paths (Run 10)
 - [ ] Countdown color gradient on progress bar
