@@ -45,8 +45,78 @@ struct HistoryListView: View {
         .padding()
     }
 
+    // MARK: - Monthly Stats
+
+    private var monthlyStats: (sessions: Int, hours: Double, cost: Double) {
+        let calendar = Calendar.current
+        let now = Date()
+        let thisMonth = historyStore.sessions.filter {
+            calendar.isDate($0.startDate, equalTo: now, toGranularity: .month)
+        }
+        let totalHours = thisMonth.reduce(0.0) { $0 + $1.displayDuration } / 3600.0
+        let totalCost = thisMonth.compactMap(\.totalCost).reduce(0.0, +)
+        return (thisMonth.count, totalHours, totalCost)
+    }
+
+    @ViewBuilder
+    private var statsCard: some View {
+        if !historyStore.sessions.isEmpty {
+            let stats = monthlyStats
+            VStack(spacing: 8) {
+                Text("This Month")
+                    .font(.caption.bold())
+                    .foregroundStyle(.secondary)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+
+                HStack(spacing: 0) {
+                    statItem(value: "\(stats.sessions)", label: "sessions")
+                    Divider().frame(height: 32)
+                    statItem(value: String(format: "%.1fh", stats.hours), label: "parked")
+                    if stats.cost > 0 {
+                        Divider().frame(height: 32)
+                        statItem(value: String(format: "$%.0f", stats.cost), label: "spent")
+                    }
+                }
+            }
+            .padding()
+            .background(Color(hex: "#4ade80").opacity(0.06))
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .listRowSeparator(.hidden)
+            .listRowBackground(Color(.systemBackground))
+            .blur(radius: isPro ? 0 : 3)
+            .overlay {
+                if !isPro {
+                    NavigationLink {
+                        UpgradeView()
+                    } label: {
+                        Label("Unlock Stats", systemImage: "lock.fill")
+                            .font(.caption.bold())
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 6)
+                            .background(.ultraThinMaterial)
+                            .clipShape(Capsule())
+                    }
+                }
+            }
+        }
+    }
+
+    private func statItem(value: String, label: String) -> some View {
+        VStack(spacing: 2) {
+            Text(value)
+                .font(.title3.bold())
+                .foregroundStyle(Color(hex: "#4ade80"))
+            Text(label)
+                .font(.caption2)
+                .foregroundStyle(.secondary)
+        }
+        .frame(maxWidth: .infinity)
+    }
+
     private var sessionList: some View {
         List {
+            statsCard
+
             // Unlocked items (deletable)
             if isPro {
                 ForEach(Array(historyStore.sessions.enumerated()), id: \.element.id) { index, session in
