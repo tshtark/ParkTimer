@@ -111,6 +111,7 @@
 ### Ready (cont.)
 - [x] Privacy policy draft — docs/privacy-policy.md, "Data Not Collected", zero network (Run 28)
 - [x] Improved alert sounds — warning (two-tone rising), expired (pulsing alarm), tick (subtle click) (Run 28)
+- [x] App Store listing copy — description, keywords, What's New, promo text, review notes in docs/app-store-listing.md (Run 29)
 
 ### Needs Tal
 - [ ] App Store Connect setup (new app listing)
