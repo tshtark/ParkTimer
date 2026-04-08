@@ -9,6 +9,14 @@ final class LocationManager: NSObject {
     var distanceToCar: CLLocationDistance?
     var walkingMinutesToCar: Double?
 
+    var isDenied: Bool {
+        authorizationStatus == .denied || authorizationStatus == .restricted
+    }
+
+    var isAuthorized: Bool {
+        authorizationStatus == .authorizedWhenInUse || authorizationStatus == .authorizedAlways
+    }
+
     private let manager = CLLocationManager()
     private let geocoder = CLGeocoder()
 

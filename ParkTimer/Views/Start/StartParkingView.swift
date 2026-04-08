@@ -28,6 +28,7 @@ struct StartParkingView: View {
             ScrollView {
                 VStack(spacing: 24) {
                     headerSection
+                    warningBanners
                     durationSection
                     locationSection
                     noteSection
@@ -49,6 +50,57 @@ struct StartParkingView: View {
             locationManager.requestLocation()
             geocodeCurrentLocation()
         }
+    }
+
+    // MARK: - Warnings
+
+    @ViewBuilder
+    private var warningBanners: some View {
+        if AlertManager.shared.isNotificationDenied {
+            warningBanner(
+                icon: "bell.slash.fill",
+                message: "Notifications are disabled. You won't receive parking alerts when the app is in the background.",
+                action: "Open Settings",
+                onTap: {
+                    if let url = URL(string: UIApplication.openSettingsURLString) {
+                        UIApplication.shared.open(url)
+                    }
+                }
+            )
+        }
+
+        if locationManager.isDenied {
+            warningBanner(
+                icon: "location.slash.fill",
+                message: "Location is disabled. Your car's position won't be saved.",
+                action: "Open Settings",
+                onTap: {
+                    if let url = URL(string: UIApplication.openSettingsURLString) {
+                        UIApplication.shared.open(url)
+                    }
+                }
+            )
+        }
+    }
+
+    private func warningBanner(icon: String, message: String, action: String, onTap: @escaping () -> Void) -> some View {
+        HStack(spacing: 10) {
+            Image(systemName: icon)
+                .foregroundStyle(Color(hex: "#fbbf24"))
+
+            Text(message)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+
+            Spacer()
+
+            Button(action) { onTap() }
+                .font(.caption.bold())
+                .foregroundStyle(Color(hex: "#4ade80"))
+        }
+        .padding(12)
+        .background(Color(hex: "#fbbf24").opacity(0.1))
+        .clipShape(RoundedRectangle(cornerRadius: 10))
     }
 
     // MARK: - Sections
@@ -123,6 +175,10 @@ struct StartParkingView: View {
                 } else if let address = geocodedAddress {
                     Text(address)
                         .font(.subheadline)
+                } else if locationManager.isDenied {
+                    Text("Location denied — tap to enable")
+                        .font(.subheadline)
+                        .foregroundStyle(Color(hex: "#fbbf24"))
                 } else {
                     Text("Location unavailable")
                         .font(.subheadline)

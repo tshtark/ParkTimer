@@ -41,10 +41,10 @@
 - [x] Expired sessions in history marked red — added red badge + warning triangle for expired sessions (Run 1)
 
 ### P1 — Robustness
-- [ ] Location permission denied — graceful handling
-- [ ] Notification permission denied — in-app warning
-- [ ] No-location scenario — allow timer without GPS
-- [ ] Background/foreground cycle — verify countdown resumes correctly
+- [x] Location permission denied — yellow warning banner + "Open Settings" link + location section shows "Location denied" in yellow (Run 4)
+- [x] Notification permission denied — yellow warning banner with "Open Settings" link when notifications denied (Run 4)
+- [x] No-location scenario — timer works without GPS, no distance/walking cards shown, location stored as 0,0 (Run 4)
+- [x] Background/foreground cycle — wall-clock timer resumes correctly by design (meterEndDate - Date()), verified via kill/relaunch (Run 1)
 - [ ] Proper error states for all failure modes
 
 ### P2 — UI/UX Polish

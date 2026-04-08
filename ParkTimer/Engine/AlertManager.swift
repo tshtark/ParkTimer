@@ -2,8 +2,16 @@ import Foundation
 import UserNotifications
 
 @MainActor
+@Observable
 final class AlertManager {
     static let shared = AlertManager()
+
+    var isNotificationDenied = false
+
+    func checkNotificationStatus() async {
+        let settings = await UNUserNotificationCenter.current().notificationSettings()
+        isNotificationDenied = settings.authorizationStatus == .denied
+    }
 
     func requestPermission() async {
         do {

@@ -116,6 +116,7 @@ struct ContentView: View {
 
             Task {
                 await AlertManager.shared.requestPermission()
+                await AlertManager.shared.checkNotificationStatus()
                 await StoreManager.shared.loadProduct()
             }
         }
