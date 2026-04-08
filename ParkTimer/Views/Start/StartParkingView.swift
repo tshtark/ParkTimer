@@ -30,14 +30,14 @@ struct StartParkingView: View {
                 VStack(spacing: 24) {
                     headerSection
                     warningBanners
-                    proNudgeCard
                     quickRestartSection
                     durationSection
+                    startButton
+                    unmeeteredButton
+                    proNudgeCard
                     locationSection
                     noteSection
                     photoSection
-                    startButton
-                    unmeeteredButton
                 }
                 .padding()
             }

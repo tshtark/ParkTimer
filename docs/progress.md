@@ -80,3 +80,6 @@
 - [x] Post-session Pro nudge — "Never get caught off guard" card on Start screen after 3+ metered sessions, dismissable with X, resets each app launch (Run 13)
 - [x] Distance-based Pro hint — on Active Session when >200m from car, subtle "Pro tip: Smart Alerts account for walking time" linking to UpgradeView (Run 13)
 - [x] First-use Pro education — Welcome sheet on first launch with free feature bullets + Pro teaser, "Get Started" button, never shows again (Run 17)
+
+### P7 — Feature Discovery (self-discovered)
+- [x] Start screen layout reorder — Start button + unmetered link moved above the fold, right after duration presets. Optional fields (note, photo, location) below. Two-tap flow with zero scrolling. (Run 19)
