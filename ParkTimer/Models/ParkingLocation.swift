@@ -2,10 +2,10 @@ import Foundation
 import CoreLocation
 
 struct ParkingLocation: Codable, Sendable {
-    let latitude: Double
-    let longitude: Double
-    let address: String?
-    let photoFilename: String?
+    var latitude: Double
+    var longitude: Double
+    var address: String?
+    var photoFilename: String?
 
     var coordinate: CLLocationCoordinate2D {
         CLLocationCoordinate2D(latitude: latitude, longitude: longitude)

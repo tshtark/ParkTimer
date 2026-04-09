@@ -5,7 +5,7 @@ struct ParkingSession: Codable, Identifiable, Sendable {
     let startDate: Date
     var meterEndDate: Date?          // nil = unmetered (count-up mode)
     var duration: TimeInterval?      // how long was purchased (metered only)
-    let location: ParkingLocation
+    var location: ParkingLocation    // mutable so late-arriving GPS can update the address
     let note: String?
     var alertMinutesBefore: Int      // default 10, configurable (paid)
     var isSmartAlertEnabled: Bool    // distance-aware (paid)

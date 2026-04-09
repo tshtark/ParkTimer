@@ -1,0 +1,24 @@
+{
+  "fill" : {
+    "solid" : "srgb:0.00000,0.00000,0.00000,1.00000"
+  },
+  "groups" : [
+    {
+      "layers" : [
+        {
+          "image-name" : "spiral_p.png",
+          "name" : "ParkTimer Icon"
+        }
+      ],
+      "lighting" : "combined",
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.0
+      },
+      "specular" : false
+    }
+  ],
+  "supported-platforms" : {
+    "squares" : "shared"
+  }
+}

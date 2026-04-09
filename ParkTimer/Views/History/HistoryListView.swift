@@ -74,7 +74,7 @@ struct HistoryListView: View {
                     statItem(value: String(format: "%.1fh", stats.hours), label: "parked")
                     if stats.cost > 0 {
                         Divider().frame(height: 32)
-                        statItem(value: String(format: "$%.0f", stats.cost), label: "spent")
+                        statItem(value: String(format: "$%.2f", stats.cost), label: "spent")
                     }
                 }
             }
@@ -193,7 +193,7 @@ struct HistoryListView: View {
                             .foregroundStyle(.secondary)
                     }
 
-                    if let cost = session.totalCost {
+                    if isPro, let cost = session.totalCost {
                         Text(String(format: "$%.2f", cost))
                             .font(.caption.bold())
                             .foregroundStyle(Color(hex: "#fbbf24"))

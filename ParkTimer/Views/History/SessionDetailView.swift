@@ -4,6 +4,7 @@ import MapKit
 struct SessionDetailView: View {
     let session: ParkingSession
 
+    private var isPro: Bool { StoreManager.shared.isProUnlocked }
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
@@ -74,7 +75,7 @@ struct SessionDetailView: View {
                 )
             }
 
-            if let cost = session.totalCost {
+            if isPro, let cost = session.totalCost {
                 detailRow(
                     icon: "dollarsign.circle.fill",
                     label: "Total Cost",

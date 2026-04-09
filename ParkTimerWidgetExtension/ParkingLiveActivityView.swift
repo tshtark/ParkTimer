@@ -13,7 +13,7 @@ struct ParkingLiveActivityWidget: Widget {
             DynamicIsland {
                 // Expanded
                 DynamicIslandExpandedRegion(.leading) {
-                    Label(context.attributes.locationName, systemImage: "mappin.circle.fill")
+                    Label(context.state.locationName, systemImage: "mappin.circle.fill")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                         .lineLimit(1)
@@ -76,7 +76,7 @@ struct ParkingLiveActivityWidget: Widget {
                 Text("ParkTimer")
                     .font(.headline)
                 Spacer()
-                Text(context.attributes.locationName)
+                Text(context.state.locationName)
                     .font(.caption)
                     .foregroundStyle(.secondary)
                     .lineLimit(1)

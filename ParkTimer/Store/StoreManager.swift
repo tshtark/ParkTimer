@@ -25,6 +25,12 @@ final class StoreManager {
     /// Check Apple's transaction ledger for a valid Pro entitlement.
     /// Called on every app launch — source of truth, not UserDefaults.
     func checkEntitlements() async {
+        #if DEBUG
+        if UserDefaults.standard.bool(forKey: "store.proUnlocked") {
+            isProUnlocked = true
+            return
+        }
+        #endif
         for await result in Transaction.currentEntitlements {
             if case .verified(let transaction) = result,
                transaction.productID == Self.productID {

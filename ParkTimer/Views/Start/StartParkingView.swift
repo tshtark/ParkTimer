@@ -1,5 +1,6 @@
 import SwiftUI
 import PhotosUI
+import ActivityKit
 
 struct StartParkingView: View {
     let engine: ParkingEngine
@@ -15,8 +16,13 @@ struct StartParkingView: View {
     @State private var photoData: Data?
     @State private var geocodedAddress: String?
     @State private var isGeocodingAddress = false
-    @State private var proNudgeDismissed = false
-    @State private var hourlyRateText: String = SettingsManager.shared.lastHourlyRate
+    // BUG-006: persist across launches so a user who taps the X isn't nagged again.
+    @State private var proNudgeDismissed: Bool = UserDefaults.standard.bool(forKey: Self.proNudgeDismissedKey)
+    // BUG-016: sanitize the stored value on load too, in case an earlier session saved
+    // garbage (e.g. simulator hardware-keyboard input) before we added the filter.
+    @State private var hourlyRateText: String = Self.sanitizeRate(SettingsManager.shared.lastHourlyRate)
+
+    private static let proNudgeDismissedKey = "proNudgeDismissed"
 
     private let presets: [(String, TimeInterval)] = [
         ("15m", 15 * 60),
@@ -52,8 +58,20 @@ struct StartParkingView: View {
             }
         }
         .onAppear {
-            locationManager.requestLocation()
+            // BUG-002: `requestLocation()` falls back to `requestPermission()` when
+            // status is `.notDetermined`, which triggers the system dialog. That fires
+            // on top of the first-launch Welcome sheet. Only request the one-shot
+            // location once the user has already granted permission; ContentView
+            // handles the initial permission prompt after Welcome is dismissed.
+            if locationManager.isAuthorized {
+                locationManager.requestLocation()
+            }
             geocodeCurrentLocation()
+            // BUG-016: if SettingsManager had a pre-existing malformed value, flush the
+            // sanitized version back so it never reappears in future launches.
+            if SettingsManager.shared.lastHourlyRate != hourlyRateText {
+                SettingsManager.shared.lastHourlyRate = hourlyRateText
+            }
         }
     }
 
@@ -87,6 +105,7 @@ struct StartParkingView: View {
                 VStack(spacing: 8) {
                     Button {
                         proNudgeDismissed = true
+                        UserDefaults.standard.set(true, forKey: Self.proNudgeDismissedKey)
                     } label: {
                         Image(systemName: "xmark")
                             .font(.caption2)
@@ -155,13 +174,17 @@ struct StartParkingView: View {
         )
 
         let settings = SettingsManager.shared
+        // BUG-020: Quick Restart inherits the prior session's `hourlyRate`, but cost
+        // tracking is a Pro feature. If the user has downgraded since that session,
+        // drop the rate so the active session doesn't leak a Cost-so-far card.
+        let inheritedRate = StoreManager.shared.isProUnlocked ? session.hourlyRate : nil
         engine.startMetered(
             duration: duration,
             location: loc,
             note: nil,
             alertMinutes: settings.alertMinutesBefore,
             smartAlert: settings.isSmartAlertsEnabled && StoreManager.shared.isProUnlocked,
-            hourlyRate: session.hourlyRate
+            hourlyRate: inheritedRate
         )
 
         if let newSession = engine.session {
@@ -197,6 +220,22 @@ struct StartParkingView: View {
             warningBanner(
                 icon: "location.slash.fill",
                 message: "Location is disabled. Your car's position won't be saved.",
+                action: "Open Settings",
+                onTap: {
+                    if let url = URL(string: UIApplication.openSettingsURLString) {
+                        UIApplication.shared.open(url)
+                    }
+                }
+            )
+        }
+
+        // BUG-014: surface a recovery path when the user has declined the iOS system
+        // dialog for Live Activities. Without this banner, the app's primary
+        // differentiator is silently broken and the user has no idea why.
+        if !ActivityAuthorizationInfo().areActivitiesEnabled {
+            warningBanner(
+                icon: "rectangle.on.rectangle.slash",
+                message: "Live Activities are off. Enable them to see your countdown on the Lock Screen.",
                 action: "Open Settings",
                 onTap: {
                     if let url = URL(string: UIApplication.openSettingsURLString) {
@@ -312,9 +351,14 @@ struct StartParkingView: View {
 
             Spacer()
 
-            if locationManager.currentLocation != nil {
+            // BUG-003: only show the green checkmark once we actually have an address
+            // to display. Showing ✓ next to "Location unavailable" was misleading.
+            if geocodedAddress != nil {
                 Image(systemName: "checkmark.circle.fill")
                     .foregroundStyle(.green)
+            } else if isGeocodingAddress || (locationManager.currentLocation != nil && !locationManager.isDenied) {
+                ProgressView()
+                    .controlSize(.small)
             }
         }
         .padding()
@@ -343,11 +387,32 @@ struct StartParkingView: View {
                 TextField("Hourly rate (e.g., 3.00)", text: $hourlyRateText)
                     .font(.subheadline)
                     .keyboardType(.decimalPad)
+                    // BUG-016: decimalPad doesn't stop hardware keyboards (simulator,
+                    // Bluetooth keyboards), so filter client-side to digits + one dot.
+                    .onChange(of: hourlyRateText) { _, newValue in
+                        hourlyRateText = Self.sanitizeRate(newValue)
+                    }
             }
             .padding()
             .background(Color(.systemGray6))
             .clipShape(RoundedRectangle(cornerRadius: 12))
         }
+    }
+
+    /// Keep only digits and at most one decimal point. Drops everything else so a user
+    /// who pastes or types letters silently sees them disappear.
+    private static func sanitizeRate(_ input: String) -> String {
+        var seenDot = false
+        var out = ""
+        for character in input {
+            if character.isNumber {
+                out.append(character)
+            } else if character == "." && !seenDot {
+                seenDot = true
+                out.append(character)
+            }
+        }
+        return out
     }
 
     private var photoSection: some View {

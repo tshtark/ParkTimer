@@ -78,11 +78,12 @@ final class ParkingEngine {
             let remaining = endDate.timeIntervalSince(Date())
             timeRemaining = max(0, remaining)
             elapsedTime = Date().timeIntervalSince(session.startDate)
+            let warningThreshold = TimeInterval(session.alertMinutesBefore * 60)
 
             if remaining <= 0 {
                 state = .expired
                 warningFired = true
-            } else if remaining <= 600 {
+            } else if remaining <= warningThreshold {
                 state = .warning
                 warningFired = true
             } else {
@@ -93,6 +94,21 @@ final class ParkingEngine {
             elapsedTime = Date().timeIntervalSince(session.startDate)
         }
         startTick()
+    }
+
+    // MARK: - Update Location (retroactive, after GPS/geocode resolves)
+
+    /// Update the active session's coordinates and/or address — used when the user
+    /// started a session before GPS had a fix, or before reverse geocoding completed.
+    @discardableResult
+    func updateLocation(latitude: Double? = nil, longitude: Double? = nil,
+                        address: String? = nil) -> ParkingSession? {
+        guard var updatedSession = session else { return nil }
+        if let latitude { updatedSession.location.latitude = latitude }
+        if let longitude { updatedSession.location.longitude = longitude }
+        if let address { updatedSession.location.address = address }
+        session = updatedSession
+        return updatedSession
     }
 
     // MARK: - Extend Time (paid)
@@ -109,7 +125,8 @@ final class ParkingEngine {
         timeRemaining = updatedSession.meterEndDate!.timeIntervalSince(Date())
 
         // Reset state if was expired/warning
-        if timeRemaining > 600 {
+        let warningThreshold = TimeInterval(updatedSession.alertMinutesBefore * 60)
+        if timeRemaining > warningThreshold {
             state = .active
             warningFired = false
         } else if timeRemaining > 0 {
@@ -154,10 +171,15 @@ final class ParkingEngine {
             timeRemaining = max(0, endDate.timeIntervalSince(Date()))
             elapsedTime = Date().timeIntervalSince(session.startDate)
 
+            // BUG-010: honour the session's configured alert-before-expiry time instead
+            // of hardcoding 10 minutes, so in-app warnings match the notifications
+            // AlertManager already schedules.
+            let warningThreshold = TimeInterval(session.alertMinutesBefore * 60)
+
             if timeRemaining <= 0 && state != .expired {
                 state = .expired
                 onExpired?()
-            } else if timeRemaining <= 600 && state == .active {
+            } else if timeRemaining <= warningThreshold && state == .active {
                 state = .warning
                 if !warningFired {
                     warningFired = true

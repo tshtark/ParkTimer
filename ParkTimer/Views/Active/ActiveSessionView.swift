@@ -1,5 +1,6 @@
 import SwiftUI
 import StoreKit
+import MapKit
 
 struct ActiveSessionView: View {
     let engine: ParkingEngine
@@ -140,8 +141,14 @@ struct ActiveSessionView: View {
                 .animation(.easeInOut(duration: 0.5), value: engine.state)
             }
 
-            // Parking cost (Pro)
-            if let session = engine.session, let rate = session.hourlyRate, rate > 0 {
+            // Parking cost (Pro) — BUG-020: also gate on current Pro entitlement so a
+            // session that inherited a rate from a previous Pro purchase (e.g. through
+            // Quick Restart or engine.resume) doesn't leak cost tracking to a now-free
+            // user.
+            if let session = engine.session,
+               let rate = session.hourlyRate,
+               rate > 0,
+               StoreManager.shared.isProUnlocked {
                 let elapsed = engine.elapsedTime / 3600.0
                 let cost = elapsed * rate
                 infoCard(
@@ -199,14 +206,37 @@ struct ActiveSessionView: View {
                 }
             }
 
-            // Location
-            if let session = engine.session, let address = session.location.address {
-                infoCard(
-                    icon: "mappin.circle.fill",
-                    title: "Location",
-                    value: address,
-                    color: Color(hex: "#4ade80")
-                )
+            // Location — tappable for Directions (BUG-015); shown for both metered and
+            // unmetered sessions (BUG-018), falling back to "Location saved" when the
+            // address hasn't been geocoded yet.
+            if let session = engine.session {
+                Button {
+                    openDirectionsToCar(location: session.location)
+                } label: {
+                    HStack {
+                        Image(systemName: "mappin.circle.fill")
+                            .foregroundStyle(Color(hex: "#4ade80"))
+                            .frame(width: 28)
+
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("Location")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                            Text(session.location.address ?? "Location saved")
+                                .font(.subheadline.weight(.medium))
+                                .foregroundStyle(.primary)
+                                .lineLimit(2)
+                        }
+                        Spacer()
+                        Image(systemName: "arrow.turn.up.right")
+                            .font(.caption.weight(.semibold))
+                            .foregroundStyle(Color(hex: "#4ade80"))
+                    }
+                    .padding()
+                    .background(Color(.systemGray6))
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                }
+                .buttonStyle(.plain)
             }
 
             // Note
@@ -244,6 +274,17 @@ struct ActiveSessionView: View {
                 .clipShape(RoundedRectangle(cornerRadius: 12))
             }
         }
+    }
+
+    /// BUG-015: Opens Apple Maps with walking directions to the saved car location.
+    /// Matches the PRD spec ("Location with 'Directions →' link") on the active session.
+    private func openDirectionsToCar(location: ParkingLocation) {
+        let placemark = MKPlacemark(coordinate: location.coordinate)
+        let mapItem = MKMapItem(placemark: placemark)
+        mapItem.name = location.address ?? "My Car"
+        mapItem.openInMaps(launchOptions: [
+            MKLaunchOptionsDirectionsModeKey: MKLaunchOptionsDirectionsModeWalking
+        ])
     }
 
     private func loadPhoto(filename: String) -> UIImage? {
@@ -307,11 +348,14 @@ struct ActiveSessionView: View {
     // MARK: - Helpers
 
     private func endSession() {
+        let endedSession = engine.session
         if let completed = engine.stop() {
             historyStore.add(completed)
         }
         sessionStore.clear()
-        ParkingActivityManager.shared.end()
+        if let endedSession {
+            ParkingActivityManager.shared.end(session: endedSession)
+        }
         AlertManager.shared.cancelAll()
         HapticManager.shared.successFeedback()
 
