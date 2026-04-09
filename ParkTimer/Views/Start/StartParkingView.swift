@@ -407,8 +407,8 @@ struct StartParkingView: View {
         )
 
         let settings = SettingsManager.shared
-        let rate = Double(hourlyRateText)
-        if !hourlyRateText.isEmpty {
+        let rate = StoreManager.shared.isProUnlocked ? Double(hourlyRateText) : nil
+        if StoreManager.shared.isProUnlocked && !hourlyRateText.isEmpty {
             settings.lastHourlyRate = hourlyRateText
         }
         engine.startMetered(
