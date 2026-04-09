@@ -85,34 +85,115 @@ Pro features to audit:
 - **Location** — Revoke permission. Check: Start screen, Active Session, Find Car, History detail. All handle it gracefully?
 - **Pro status** — Check EVERY screen has correct Pro/Free behavior. Don't just check Settings — check History blur, active session Add Time, Start screen rate field, Settings locks.
 
-### Step 7: Think Like These People
+### Step 7: The Three Questions
 
-For each persona, do their FULL journey:
+For EVERY screen, ask these three questions in this order. They are different questions and catch different bugs:
 
-**Alex, rushing to dinner (free user):**
-1. Open app cold → What's the first thing they see?
-2. Need 1 hour → How many taps to start?
-3. Close app, eat dinner → 50 min later, get notification?
-4. Walk back → Open app → What do they see?
-5. At car → End parking → What happens?
+**Question 1: "Does this match the PRD?"** (spec compliance)
+Check the feature list. Is everything that should be here, here? Is anything that shouldn't be here, here?
+*This catches: missing features, wrong labels, incorrect behavior.*
 
-**Sam, daily commuter (Pro user):**
-1. Open app → Quick Restart? → One tap?
-2. Same rate as yesterday pre-filled?
-3. Check history → Monthly stats make sense?
-4. End parking → Cost correct?
+**Question 2: "Does this work correctly?"** (functional correctness)
+Tap everything. Enter data. Navigate away and back. Kill and relaunch.
+*This catches: crashes, data loss, broken navigation, state bugs.*
 
-**Jordan, airport parker (free user):**
-1. Tap "No meter — just save my spot"
-2. Fly for 3 days → Open app at airport
-3. Find Car tab → Can they find their car?
-4. End parking → History shows it?
+**Question 3 — THE MOST IMPORTANT: "Would a real human, in this real moment, understand what they're seeing?"** (human sense)
 
-**Morgan, just downloaded the app:**
-1. First launch → Welcome sheet?
-2. Location permission dialog → What if they deny?
-3. Notification permission → What if they deny?
-4. They don't know what "Pro" is yet → Is it explained anywhere?
+This is not "does the feature work." This is "does the feature make SENSE to someone who just parked their car."
+
+To answer this, you must imagine the user's:
+- **Emotional state** — Are they stressed? Rushing? Relaxed? Confused?
+- **Knowledge state** — First time? Daily user? Do they know what "Pro" means? Did they set up cost tracking?
+- **Physical context** — Standing on a sidewalk in the rain. Walking through an airport. Sitting at a restaurant checking their phone.
+- **Attention level** — They have 5 seconds of attention. What do they see FIRST? Does it answer their #1 question?
+
+**The cost tracker bug was a Question 3 bug.** The PRD said "cost tracking is Pro." The feature "worked." But a free user saw "$0.01" on their screen and thought "what is this? I didn't ask for this." That's not a spec violation or a functional bug — it's a human sense violation. The feature leaked into a context where it made no sense to the person looking at it.
+
+**How to test Question 3:** For each screen, say out loud:
+- "I am [person] and I just [action]. I look at my phone and I see [describe screen]. My reaction is: ___"
+- If the reaction is confusion, annoyance, or "I don't understand" — that's a bug.
+- If you have to say "well, this is because the code does X" to explain it — that's a bug. Real users don't read code.
+
+### Step 8: Persona Journeys (with human sense)
+
+For each persona, narrate their EXPERIENCE, not just their flow. Include how they FEEL at each step.
+
+**Alex, rushing to dinner (free user, first week using the app):**
+> I just parallel parked on Valencia Street. It's raining. I have 1 hour on the meter. I'm already 10 minutes late for dinner. I open ParkTimer.
+1. What's the FIRST thing I see? Can I start a timer in under 3 seconds?
+2. I don't care about my "car location" right now. I don't care about Pro. I need a timer NOW.
+3. I tap 1h, I tap Start. Am I done? Or does the app want more from me?
+4. I close the app and put my phone in my pocket. 50 minutes later, does my phone buzz? What does the notification SAY? Does it tell me something USEFUL or just "meter expiring"?
+5. I'm walking back. I open the app. The timer is at 4 minutes, yellow. My heart rate goes up. Is the UI HELPING me or adding to my stress? Is the "End Parking" button easy to find or buried?
+6. I end parking. What do I see? Am I dumped back to the start screen? Is there any acknowledgment that my session was saved?
+> **At no point should I see anything I didn't ask for.** No cost trackers I didn't set up. No confusing Pro features leaking through. No "sparkles" or "upgrade" when I'm stressed about my meter.
+
+**Sam, daily commuter (Pro user, uses app every workday):**
+> I park on the same block every morning. $3/hour, 2 hours. I've done this 40 times.
+1. I open the app. Is Quick Restart the FIRST thing I see? Can I start with ONE tap?
+2. The rate should be $3.00, pre-filled. I should not have to enter it.
+3. 2 hours later, I end parking. Does it show me "$6.00"? Does that match my math?
+4. I check History on Friday. Can I see what I spent this week? Is the monthly total correct?
+> **Sam's test: can I go from "parked" to "timer running" in under 2 seconds?** Every extra tap is a failure.
+
+**Jordan, airport parker (free user, uses app once a month):**
+> I just parked at SFO long-term lot, Level 3, Row J. I'm catching a flight. I won't need this app for 4 days.
+1. I tap "No meter — just save my spot." Do I feel confident my spot is saved?
+2. I add a note: "Level 3, Row J". I take a photo of the row marker. Easy?
+3. 4 days later, I land. I'm exhausted. I open ParkTimer. I need to find my car.
+4. I tap Find Car. Is my car's location there? Or does it say "No Car Saved" because I ended my session on day 1?
+5. I see the map, I tap Directions. Does it open Apple Maps? Can I walk to my car?
+> **Jordan's test: the app must remember where I parked EVEN AFTER the session ends.** The "last parked" fallback is critical for this persona.
+
+**Morgan, just downloaded the app 30 seconds ago:**
+> I saw this app on the App Store. I have no idea how it works. I just installed it.
+1. First launch: what do I see? Does it explain what this app does in 5 seconds?
+2. It asks for my location. WHY? The dialog text better explain this or I'm tapping "Don't Allow."
+3. It asks for notifications. WHY? Same thing.
+4. I get to the main screen. Do I understand what to do? Or am I staring at "15m 30m 1h 2h" with no context?
+5. I see "Pro" on some things. What IS Pro? Do I feel pressured to buy, or informed about what I'm missing?
+> **Morgan's test: can I figure out this app without reading a tutorial?** If any screen requires explanation, it's a UX bug.
+
+### Step 9: What the Simulator CANNOT Test
+
+Be honest about simulator limitations. These features CANNOT be fully verified on simulator:
+
+| Feature | What simulator CAN verify | What REQUIRES a real device |
+|---------|--------------------------|---------------------------|
+| **Haptics** | Code path executes (no crash) | Actual vibration felt by user |
+| **Audio playback** | Sound files load, play() called | Volume, quality, plays over music |
+| **Live Activity** | Widget extension builds, ActivityKit code compiles | Rendering on Lock Screen + Dynamic Island |
+| **Background notifications** | UNNotificationRequest created with correct trigger time | Actually fires when app is killed, sound plays |
+| **Real GPS** | Static simulated location, reverse geocoding | Walking, distance updates, "back at car" trigger |
+| **StoreKit purchase** | Code paths work with simctl defaults | Real Apple payment sheet, receipt validation |
+| **Camera** | PhotosPicker works | Actual camera viewfinder + capture |
+
+**How to verify what you can't see:**
+
+1. **Capture logs** — Use `start_sim_log_cap(captureConsole: true)` to stream app logs. Search for:
+   - `[AudioManager]` — did `play()` get called? Did the sound file load?
+   - `[HapticManager]` — not logged currently, but you can add print statements
+   - `[AlertManager]` — was the notification scheduled? At what time?
+   - `[LiveActivity]` — did start/update/end succeed?
+
+2. **Check notification scheduling** — After starting a metered session, verify notifications were actually scheduled:
+   ```swift
+   // Could add a debug method to AlertManager:
+   UNUserNotificationCenter.current().getPendingNotificationRequests { requests in
+       print("[AlertManager] Pending: \(requests.count) notifications")
+       for r in requests { print("  - \(r.identifier) trigger: \(r.trigger)") }
+   }
+   ```
+
+3. **Read code paths** — When you can't test the output, verify the input. Read the function, trace the call path, confirm the right method is called with the right arguments. This is NOT a substitute for device testing, but it catches "forgot to call the function" bugs.
+
+4. **Add a "MUST TEST ON DEVICE" checklist** to your bug report — when you find something that needs device verification, don't skip it, track it:
+   ```
+   DEVICE-ONLY: Warning haptic fires when timer enters yellow state
+   DEVICE-ONLY: Expired notification sound is audible from pocket
+   DEVICE-ONLY: Live Activity countdown renders on Lock Screen
+   DEVICE-ONLY: Audio plays over Spotify in foreground
+   ```
 
 ## Reporting
 
