@@ -147,6 +147,7 @@ struct ContentView: View {
                 await AlertManager.shared.requestPermission()
                 await AlertManager.shared.checkNotificationStatus()
                 await StoreManager.shared.loadProduct()
+                await StoreManager.shared.checkEntitlements()
             }
         }
     }

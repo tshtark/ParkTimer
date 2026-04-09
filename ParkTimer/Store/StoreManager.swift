@@ -6,18 +6,12 @@ final class StoreManager {
     static let shared = StoreManager()
 
     private static let productID = "com.parktimer.pro"
-    private static let unlockKey = "store.proUnlocked"
 
-    var isProUnlocked: Bool {
-        didSet { UserDefaults.standard.set(isProUnlocked, forKey: Self.unlockKey) }
-    }
-
+    var isProUnlocked = false
     var product: Product?
     var purchaseError: String?
 
-    private init() {
-        isProUnlocked = UserDefaults.standard.bool(forKey: Self.unlockKey)
-    }
+    private init() {}
 
     func loadProduct() async {
         do {
@@ -26,6 +20,19 @@ final class StoreManager {
         } catch {
             print("[StoreManager] Failed to load products: \(error)")
         }
+    }
+
+    /// Check Apple's transaction ledger for a valid Pro entitlement.
+    /// Called on every app launch — source of truth, not UserDefaults.
+    func checkEntitlements() async {
+        for await result in Transaction.currentEntitlements {
+            if case .verified(let transaction) = result,
+               transaction.productID == Self.productID {
+                isProUnlocked = true
+                return
+            }
+        }
+        isProUnlocked = false
     }
 
     func purchase() async {
@@ -59,13 +66,7 @@ final class StoreManager {
     func restorePurchases() async {
         do {
             try await AppStore.sync()
-            for await result in Transaction.currentEntitlements {
-                if case .verified(let transaction) = result,
-                   transaction.productID == Self.productID {
-                    isProUnlocked = true
-                    return
-                }
-            }
+            await checkEntitlements()
         } catch {
             purchaseError = "Restore failed: \(error.localizedDescription)"
         }
