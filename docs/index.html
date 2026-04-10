@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ParkTimer — Parking Meter Alert</title>
+  <meta name="description" content="Parking meter countdown with Live Activity and car-finder. Support and privacy policy for the ParkTimer iOS app.">
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #ffffff;
+      --text: #0a0a0a;
+      --muted: #6b7280;
+      --accent: #4ade80;
+      --card: #f5f7fa;
+      --border: #e5e7eb;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0a0a0a;
+        --text: #fafafa;
+        --muted: #9ca3af;
+        --card: #16181c;
+        --border: #27272a;
+      }
+    }
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI",
+        system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.55;
+    }
+    main {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 48px 24px 96px;
+    }
+    header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+    .mark {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      background: #000;
+      color: var(--accent);
+      display: grid;
+      place-items: center;
+      font-size: 32px;
+      font-weight: 800;
+      font-family: ui-rounded, "SF Pro Rounded", system-ui, sans-serif;
+    }
+    h1 {
+      font-size: 28px;
+      margin: 0;
+      letter-spacing: -0.01em;
+    }
+    .tagline {
+      color: var(--muted);
+      margin: 2px 0 0;
+      font-size: 15px;
+    }
+    h2 {
+      font-size: 20px;
+      margin: 40px 0 12px;
+      letter-spacing: -0.005em;
+    }
+    p { margin: 0 0 14px; }
+    a { color: #10b981; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px 20px;
+      margin: 12px 0;
+    }
+    .card h3 {
+      font-size: 16px;
+      margin: 0 0 6px;
+    }
+    .card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    code {
+      font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+      font-size: 13px;
+      background: var(--card);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+    footer {
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 64px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+    }
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <div class="mark">p</div>
+    <div>
+      <h1>ParkTimer</h1>
+      <p class="tagline">Parking meter countdown with Live Activity &amp; car finder.</p>
+    </div>
+  </header>
+
+  <p>
+    ParkTimer counts down your parking meter on the Lock Screen and Dynamic Island,
+    saves your car's location automatically, and alerts you before your meter
+    expires — so you never come back to a ticket.
+  </p>
+
+  <h2>Support</h2>
+  <div class="card">
+    <h3>Need help or want to report a bug?</h3>
+    <p>
+      Email <a href="mailto:shtark285@gmail.com">shtark285@gmail.com</a>,
+      or open an issue on
+      <a href="https://github.com/tshtark/ParkTimer/issues">GitHub</a>.
+    </p>
+  </div>
+
+  <h2>Privacy</h2>
+  <div class="card">
+    <h3>We collect zero data.</h3>
+    <p>
+      No analytics, no tracking, no accounts, no network requests. Everything
+      — including your parking history, car location, and photos — stays on
+      your device.
+    </p>
+  </div>
+  <p>
+    Full details: <a href="privacy.html">Privacy Policy</a>.
+  </p>
+
+  <footer>
+    © 2026 Tal Shtark · ParkTimer is released on the App Store.
+  </footer>
+</main>
+</body>
+</html>
