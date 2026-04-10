@@ -57,4 +57,4 @@ If we ever change this policy, we will update this page with a new "Last updated
 
 ## Contact
 
-If you have questions about this privacy policy, contact us at parktimer@example.com.
+If you have questions about this privacy policy, contact us at shtark285@gmail.com.

@@ -226,7 +226,7 @@ struct PrivacyPolicyView: View {
 
                 section(
                     title: "Contact",
-                    body: "If you have questions about this privacy policy, contact us at parktimer@example.com."
+                    body: "If you have questions about this privacy policy, contact us at shtark285@gmail.com."
                 )
             }
             .padding()
